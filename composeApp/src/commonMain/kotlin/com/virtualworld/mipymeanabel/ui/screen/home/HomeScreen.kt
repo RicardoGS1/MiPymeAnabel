@@ -29,9 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun HomeScreen( homeViewModel: HomeViewModel = viewModel { HomeViewModel() }){
+fun HomeScreen( homeViewModel: HomeViewModel = koinViewModel()){
 
     val products by  homeViewModel.productsState.collectAsState()
 
