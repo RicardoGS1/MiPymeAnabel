@@ -1,4 +1,9 @@
 package com.virtualworld.mipymeanabel.id
 
-class DataModules {
+import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
+
+val dataModules = module {
+    factoryOf (::FirebaseDataSourceImpl )
 }

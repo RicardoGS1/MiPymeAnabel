@@ -2,17 +2,20 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
     alias(libs.plugins.kotlinxSerialization)
+
     alias(libs.plugins.ksp)
     //alias(libs.plugins.androidxRoom)
     alias(libs.plugins.gradleBuildConfig)
 
-   // kotlin("plugin.serialization")
+    //kotlin("plugin.serialization")
    id("com.google.gms.google-services")
 
 }
