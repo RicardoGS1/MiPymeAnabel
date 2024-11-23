@@ -16,6 +16,10 @@ class HomeViewModel: ViewModel() {
     }
 
     private fun getProducts() {
+
+
+
+
         _productsState.update {
             listOf(
                 Products(0,"jjjj","mkmkmk","kokok","https://picsum.photos/id/10/200/300",9.0),

@@ -12,6 +12,9 @@ plugins {
     //alias(libs.plugins.androidxRoom)
     alias(libs.plugins.gradleBuildConfig)
 
+   // kotlin("plugin.serialization")
+   id("com.google.gms.google-services")
+
 }
 
 kotlin {
@@ -41,6 +44,8 @@ kotlin {
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,6 +72,12 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.moko.permissions.compose)
+
+            implementation(libs.gitlive.firebase.firestore)
+            implementation(libs.kotlinx.coroutines.core)
+
+            implementation(libs.kotlinx.serialization.json)
+
 
         }
 

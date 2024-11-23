@@ -8,4 +8,9 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.androidxRoom) apply false
+
+    id("com.google.gms.google-services") version "4.4.2" apply false
+    kotlin("plugin.serialization") version libs.versions.kotlin
+
+
 }
