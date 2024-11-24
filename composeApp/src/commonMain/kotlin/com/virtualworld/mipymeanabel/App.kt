@@ -6,7 +6,6 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import com.virtualworld.mipymeanabel.ui.screen.main.MainScreen
-import dev.gitlive.firebase.FirebaseApp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

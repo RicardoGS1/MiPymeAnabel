@@ -2,15 +2,9 @@ package com.virtualworld.mipymeanabel.data.source.remote
 
 
 
-import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.ui.screen.home.Products
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 
 @Serializable

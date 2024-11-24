@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.ksp)
 
     alias(libs.plugins.gradleBuildConfig)
+    //FIREBASE
     id("com.google.gms.google-services")
 }
 
