@@ -2,7 +2,6 @@ package com.virtualworld.mipymeanabel.data.source.remote
 
 
 
-import androidx.room.Entity
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.ui.screen.home.Products
 import dev.gitlive.firebase.Firebase
@@ -10,6 +9,7 @@ import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 
@@ -27,12 +27,19 @@ class FirebaseDataSourceImpl() {
 
     fun getUsers() = flow {
 
-        firestore.collection("PRODUCTS").snapshots.collect { querySnapshot ->
-            val users = querySnapshot.documents.map { documentSnapshot ->
-                documentSnapshot.data<Productss>()
+
+            try {
+                firestore.collection("PRODUCTS").snapshots.collect { querySnapshot ->
+                    val users = querySnapshot.documents.map { documentSnapshot ->
+                        documentSnapshot.data<Productss>()
+                    }
+                    emit(users)
+                }
+            }catch (e: Exception) {
+                println(e)
             }
-            emit(users)
-        }
+
+
     }
 
 
