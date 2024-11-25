@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+   // kotlin("plugin.serialization") version "1.8.22"
     alias(libs.plugins.ksp)
 
     alias(libs.plugins.gradleBuildConfig)
@@ -85,8 +86,9 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
 
-            implementation(libs.ktor.serialization.json)
+            //implementation(libs.ktor.serialization.json)
             //implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
 
 
             //FIREBASE
@@ -131,6 +133,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.foundation.android)
     debugImplementation(compose.uiTooling)
 }
 

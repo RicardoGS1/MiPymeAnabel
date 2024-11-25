@@ -2,8 +2,8 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtualworld.mipymeanabel.data.model.Product
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
-import com.virtualworld.mipymeanabel.data.source.remote.Productss
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val firebaseDataSourceImpl: FirebaseDataSourceImpl): ViewModel() {
 
-    private val _productsState = MutableStateFlow<List<Productss>>(emptyList())
-    val productsState: StateFlow<List<Productss>> get() = _productsState.asStateFlow()
+    private val _productsState = MutableStateFlow<List<Product>>(emptyList())
+    val productsState: StateFlow<List<Product>> get() = _productsState.asStateFlow()
 
     init {
         getProducts()
@@ -22,12 +22,13 @@ class HomeViewModel(private val firebaseDataSourceImpl: FirebaseDataSourceImpl):
     private fun getProducts() {
 
         viewModelScope.launch {
-            firebaseDataSourceImpl.getUsers().collect { listProductss ->
+
+            firebaseDataSourceImpl.getUsers().collect { listProducts ->
 
                 _productsState.update {
-                    listProductss
+                    listProducts
                 }
-                println(listProductss)
+                println(listProducts)
 
             }
 
