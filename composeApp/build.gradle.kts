@@ -1,17 +1,20 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+
 plugins {
+    //KMP
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+   // kotlin("plugin.serialization") version "1.8.22"
     alias(libs.plugins.ksp)
-    //alias(libs.plugins.androidxRoom)
-    alias(libs.plugins.gradleBuildConfig)
 
+    alias(libs.plugins.gradleBuildConfig)
+    //FIREBASE
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -36,41 +39,66 @@ kotlin {
     sourceSets {
         
         androidMain.dependencies {
+
+            //COMPOSE
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
+            //NETWORK
             implementation(libs.ktor.client.okhttp)
+
+            //ID
             implementation(libs.koin.android)
+
+            //FIREBASE
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
         }
         commonMain.dependencies {
+
+            //COMPOSE
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.moko.permissions.compose)
 
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.contentnegotiation)
-            implementation(libs.ktor.serialization.json)
+            //NAVIGATION
             implementation(libs.androidx.navigation.compose)
 
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
-            implementation(project.dependencies.platform(libs.koin.bom))
+            //COROUTINES
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.coroutines.core)
+
+            //COIL
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+
+            //ID
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(libs.moko.permissions.compose)
+            implementation(project.dependencies.platform(libs.koin.bom))
+
+            //NETWORK
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentnegotiation)
+
+            //implementation(libs.ktor.serialization.json)
+            //implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
+
+
+            //FIREBASE
+            implementation(libs.gitlive.firebase.firestore)
+
 
         }
 
         iosMain.dependencies {
+            //NETWORK
             implementation(libs.ktor.client.darwin)
         }
     }
@@ -105,6 +133,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.foundation.android)
     debugImplementation(compose.uiTooling)
 }
 
