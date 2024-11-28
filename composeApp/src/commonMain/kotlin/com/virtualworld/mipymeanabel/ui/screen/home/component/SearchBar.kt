@@ -1,5 +1,6 @@
 package com.virtualworld.mipymeanabel.ui.screen.home.component
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -48,16 +50,17 @@ fun SearchBar(searchText: String, updateSearchText: (String) -> Unit) {
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                disabledContainerColor = Color.White,
-            )
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+            ),
+
         )
 
         IconButton(
             modifier = Modifier.clip(shape = RectangleShape),
             onClick = { /* Acción al hacer clic en el botón */ },
-            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Red.copy(alpha = 0.5f))
+            colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f))
 
         ) {
             Icon(
