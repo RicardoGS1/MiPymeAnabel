@@ -27,9 +27,12 @@ fun MainScreen() {
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddingValues ->
 
+
+
             AppNavHost(navController, paddingValues)
 
 
         }
     }
 }
+
