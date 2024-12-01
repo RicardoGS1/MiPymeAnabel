@@ -63,6 +63,10 @@ fun GridProducts(
             )
         }
 
+        item{
+            Box(Modifier.size(180.dp))
+        }
+
     }
 }
 

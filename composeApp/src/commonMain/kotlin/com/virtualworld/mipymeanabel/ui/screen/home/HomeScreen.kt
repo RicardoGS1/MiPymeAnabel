@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.virtualworld.mipymeanabel.ui.screen.home.component.GridProducts
 import com.virtualworld.mipymeanabel.ui.screen.home.component.ImagePagerView
 import com.virtualworld.mipymeanabel.ui.screen.home.component.SearchBar
@@ -26,14 +27,14 @@ import org.koin.core.annotation.KoinExperimentalAPI
 fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
     val products by homeViewModel.productsState.collectAsState()
+    val searchText by homeViewModel.searchText.collectAsState()
 
     val listState = rememberLazyGridState()
 
     val searchBarVisible by remember { derivedStateOf { (listState.firstVisibleItemScrollOffset < 2) } }
 
-    var searchText by remember { mutableStateOf("") }
+    val updateSearchText = { newSearchText: String -> homeViewModel.updateSearchText(newSearchText) }
 
-    val updateSearchText = { newSearchText: String -> searchText = newSearchText }
 
     val categories = listOf(
         "Todos",
@@ -51,14 +52,6 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
     val updateSelectedCategory = { category: String -> selectedCategory = category }
 
 
-
-    val pagerState = rememberPagerState(
-        initialPage = 1,
-        pageCount = { products.size }
-    )
-
-
-
     Surface(modifier = Modifier.fillMaxSize()) {
 
 
@@ -66,12 +59,12 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
 
             // Barra de búsqueda
-            AnimatedVisibility(visible = (searchBarVisible)) {
+            AnimatedVisibility(visible = (searchBarVisible)  ) {
                 SearchBar(searchText,updateSearchText)
             }
 
-            AnimatedVisibility(visible = (searchBarVisible)) {
-                ImagePagerView(products.map { it.image }, pagerState)
+            AnimatedVisibility(visible = (searchBarVisible) && searchText.isEmpty()) {
+                ImagePagerView(products.map { it.image })
             }
 
             SelectCategory(categories, selectedCategory,updateSelectedCategory)
@@ -81,7 +74,6 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
         }
     }
-
 }
 
 
