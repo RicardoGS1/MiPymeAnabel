@@ -42,7 +42,8 @@ import com.virtualworld.mipymeanabel.data.model.Product
 @Composable
 fun GridProducts(
     listState: LazyGridState,
-    products: List<Product>
+    products: List<Product>,
+    onClickFavorite: (String) -> Unit
 ) {
     LazyVerticalGrid(
         state = listState,
@@ -58,7 +59,7 @@ fun GridProducts(
             ProductItem(
                 product = it,
                 onProductClicked = {},
-                onFavoriteClicked = {}
+                onFavoriteClicked = onClickFavorite
             )
         }
 
@@ -70,7 +71,7 @@ fun GridProducts(
 }
 
 @Composable
-fun ProductItem(product: Product, onProductClicked: () -> Unit,onFavoriteClicked: () -> Unit) {
+fun ProductItem(product: Product, onProductClicked: () -> Unit, onFavoriteClicked: (String) -> Unit,) {
 
    val isFavorite by remember { mutableStateOf(false) }
 
@@ -125,7 +126,7 @@ fun ProductItem(product: Product, onProductClicked: () -> Unit,onFavoriteClicked
     }
 
         IconButton(
-            onClick = onFavoriteClicked,
+            onClick = { onFavoriteClicked(product.idp) },
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(0.dp) // Ajusta el padding según tus necesidades

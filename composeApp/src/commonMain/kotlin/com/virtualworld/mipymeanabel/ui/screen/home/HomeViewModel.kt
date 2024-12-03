@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlin.text.contains
 
 class HomeViewModel(
-    private val getAllProductUseCase: GetAllProductUseCase
+    private val getAllProductUseCase: GetAllProductUseCase,
 ) : ViewModel() {
 
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
@@ -85,6 +85,12 @@ class HomeViewModel(
         _selectedCategoryState.update {
             selected
         }
+    }
+
+    fun onClickFavorite(id: String) {
+
+
+
     }
 
 
