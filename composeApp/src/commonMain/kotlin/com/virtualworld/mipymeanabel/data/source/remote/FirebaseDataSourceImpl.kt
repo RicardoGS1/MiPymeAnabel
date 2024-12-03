@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.shareIn
 
 class FirebaseDataSourceImpl() {
 
-
     private val firestore = Firebase.firestore
 
     fun getProducts() : Flow<NetworkResponseState<List<Product>>> = flow {
@@ -34,8 +33,6 @@ class FirebaseDataSourceImpl() {
         } catch (e: FirebaseFirestoreException) {
             emit(NetworkResponseState.Error(e))
         }
-
     }
-
 
 }

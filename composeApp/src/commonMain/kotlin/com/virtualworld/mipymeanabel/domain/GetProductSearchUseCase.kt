@@ -11,19 +11,13 @@ import kotlinx.coroutines.flow.map
 
 class GetProductSearchUseCase(private val firebaseDataSourceImpl: FirebaseDataSourceImpl) {
 
-    operator fun invoke(searchText: String): Flow<NetworkResponseState<List<Product>>> {
+    operator fun invoke(): Flow<NetworkResponseState<List<Product>>> {
 
         return firebaseDataSourceImpl.getProducts().map { products ->
 
             when (products) {
                 is NetworkResponseState.Success -> {
-
-                    val productsSearch = products.result.filter { product ->
-                        product.name.contains(searchText, ignoreCase = true)
-                    }
-
-                    NetworkResponseState.Success(productsSearch)
-
+                    NetworkResponseState.Success(products.result)
                 }
 
                 is NetworkResponseState.Error -> NetworkResponseState.Error(products.exception)

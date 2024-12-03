@@ -22,6 +22,7 @@ fun SelectCategory(
 ) {
     var selectedCategory1 = selectedCategory
     LazyRow(modifier = Modifier.padding(4.dp)) {
+
         categories.forEach {
             item {
 

@@ -27,6 +27,8 @@ import org.koin.core.annotation.KoinExperimentalAPI
 fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
     val products by homeViewModel.productsState.collectAsState()
+    val categories by homeViewModel.categoryState.collectAsState()
+    val selectedCategory by homeViewModel.selectedCategoryState.collectAsState()
     val searchText by homeViewModel.searchText.collectAsState()
 
     val listState = rememberLazyGridState()
@@ -35,21 +37,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
     val updateSearchText = { newSearchText: String -> homeViewModel.updateSearchText(newSearchText) }
 
-
-    val categories = listOf(
-        "Todos",
-        "Ropa",
-        "Zapato",
-        "Utiles del Hogar",
-        "Electrodomestico",
-        "Ferreteria",
-        "Juguetes",
-        "Embases",
-        "Comida"
-    )
-
-    var selectedCategory by remember { mutableStateOf<String>("Todos") }
-    val updateSelectedCategory = { category: String -> selectedCategory = category }
+    val updateSelectedCategory = { category: String -> homeViewModel.updateSelectedCategory(category) }
 
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -58,7 +46,6 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
         Column() {
 
 
-            // Barra de búsqueda
             AnimatedVisibility(visible = (searchBarVisible)  ) {
                 SearchBar(searchText,updateSearchText)
             }
