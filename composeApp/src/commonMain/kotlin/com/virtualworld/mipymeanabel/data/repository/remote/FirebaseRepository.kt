@@ -8,7 +8,4 @@ interface FirebaseRepository {
 
     fun getAllProducts(): Flow<NetworkResponseState<List<Product>>>
 
-
-
-
 }

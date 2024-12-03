@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.Product
-import com.virtualworld.mipymeanabel.domain.GetProductSearchUseCase
+import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlin.text.contains
 
 class HomeViewModel(
-    private val getProductSearchUseCase: GetProductSearchUseCase
+    private val getAllProductUseCase: GetAllProductUseCase
 ) : ViewModel() {
 
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
@@ -41,7 +41,7 @@ class HomeViewModel(
 
         viewModelScope.launch {
 
-            getProductSearchUseCase().collect { listProducts ->
+            getAllProductUseCase().collect { listProducts ->
 
                 when (listProducts) {
                     is NetworkResponseState.Error -> TODO()

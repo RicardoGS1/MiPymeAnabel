@@ -2,16 +2,14 @@ package com.virtualworld.mipymeanabel.data.source.remote
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.Product
-import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
-import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-class FirebaseDataSourceImpl() : FirebaseDataSource {
+class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : FirebaseDataSource {
 
-    private val firestore = Firebase.firestore
 
   override  fun getAllProducts() : Flow<NetworkResponseState<List<Product>>> = flow {
 
