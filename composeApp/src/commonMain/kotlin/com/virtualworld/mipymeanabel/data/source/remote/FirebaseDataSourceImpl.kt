@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-class FirebaseDataSourceImpl() {
+class FirebaseDataSourceImpl() : FirebaseDataSource {
 
     private val firestore = Firebase.firestore
 
-    fun getProducts() : Flow<NetworkResponseState<List<Product>>> = flow {
+  override  fun getAllProducts() : Flow<NetworkResponseState<List<Product>>> = flow {
 
         try {
 
