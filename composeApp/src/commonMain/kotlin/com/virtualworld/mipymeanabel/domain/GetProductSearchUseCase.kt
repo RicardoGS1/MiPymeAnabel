@@ -1,12 +1,9 @@
 package com.virtualworld.mipymeanabel.domain
 
-import coil3.network.NetworkResponse
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.Product
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 
 class GetProductSearchUseCase(private val firebaseDataSourceImpl: FirebaseDataSourceImpl) {

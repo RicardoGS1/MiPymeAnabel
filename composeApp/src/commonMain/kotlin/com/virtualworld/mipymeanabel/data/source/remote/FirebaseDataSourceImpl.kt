@@ -5,14 +5,8 @@ import com.virtualworld.mipymeanabel.data.model.Product
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import dev.gitlive.firebase.firestore.firestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 
 
 class FirebaseDataSourceImpl() {

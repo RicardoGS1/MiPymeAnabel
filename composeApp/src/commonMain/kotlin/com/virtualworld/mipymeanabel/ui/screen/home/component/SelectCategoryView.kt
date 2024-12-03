@@ -20,14 +20,15 @@ fun SelectCategory(
     selectedCategory: String?,
     updateSelectedCategory: (String) -> Unit
 ) {
-    var selectedCategory1 = selectedCategory
     LazyRow(modifier = Modifier.padding(4.dp)) {
 
         categories.forEach {
             item {
 
                 val buttonColor by animateColorAsState(
-                    targetValue = if (selectedCategory1 == it) MaterialTheme.colorScheme.primary.copy(alpha = 0.9f) else MaterialTheme.colorScheme.secondary.copy(
+                    targetValue = if (selectedCategory == it) MaterialTheme.colorScheme.primary.copy(
+                        alpha = 0.9f
+                    ) else MaterialTheme.colorScheme.secondary.copy(
                         alpha = 0.5f
                     ),
                     animationSpec = tween(durationMillis = 500)
