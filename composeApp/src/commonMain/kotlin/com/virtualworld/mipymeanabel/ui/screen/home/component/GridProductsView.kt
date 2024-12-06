@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.Product
 
 @Composable
 fun GridProducts(

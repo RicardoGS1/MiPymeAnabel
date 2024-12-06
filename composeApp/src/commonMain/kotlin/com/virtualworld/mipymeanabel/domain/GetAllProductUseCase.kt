@@ -1,7 +1,7 @@
 package com.virtualworld.mipymeanabel.domain
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.Product
 import com.virtualworld.mipymeanabel.data.repository.remote.FirebaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

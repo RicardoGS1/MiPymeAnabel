@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.data.model
+package com.virtualworld.mipymeanabel.data.dto
 
 import kotlinx.serialization.Serializable
 

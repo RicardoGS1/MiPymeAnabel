@@ -3,7 +3,7 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.Product
 import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

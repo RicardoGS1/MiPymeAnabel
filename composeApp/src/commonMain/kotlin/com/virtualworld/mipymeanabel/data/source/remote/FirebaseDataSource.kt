@@ -1,7 +1,7 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.Product
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseDataSource {
