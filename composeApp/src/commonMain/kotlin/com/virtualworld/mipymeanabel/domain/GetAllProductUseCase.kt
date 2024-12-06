@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.map
 
 class GetAllProductUseCase(private val firebaseRepository: FirebaseRepository) {
 
+
     operator fun invoke(): Flow<NetworkResponseState<List<Product>>> {
 
         return firebaseRepository.getAllProducts().map { products ->

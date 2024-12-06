@@ -11,4 +11,6 @@ plugins {
 
     id("com.google.gms.google-services") version "4.4.2" apply false
 
+    id("androidx.room") version "2.7.0-alpha11" apply false
+
 }

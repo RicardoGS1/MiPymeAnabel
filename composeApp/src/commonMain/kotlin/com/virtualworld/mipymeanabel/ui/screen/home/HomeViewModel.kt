@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,6 +18,7 @@ import kotlin.text.contains
 
 class HomeViewModel(
     private val getAllProductUseCase: GetAllProductUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase
 ) : ViewModel() {
 
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
@@ -35,11 +37,14 @@ class HomeViewModel(
 
     init {
         getAllProducts()
+
     }
 
     private fun getAllProducts() {
 
         viewModelScope.launch {
+
+            addFavoriteUseCase.aa()
 
             getAllProductUseCase().collect { listProducts ->
 
@@ -89,6 +94,7 @@ class HomeViewModel(
 
     fun onClickFavorite(id: String) {
 
+        //addFavoriteUseCase.addFavorite(id)
 
 
     }
