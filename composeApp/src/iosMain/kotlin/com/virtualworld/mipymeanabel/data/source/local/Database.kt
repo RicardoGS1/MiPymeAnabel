@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.data.source.local
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.virtualworld.mipymeanabel.data.databese.AppDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager

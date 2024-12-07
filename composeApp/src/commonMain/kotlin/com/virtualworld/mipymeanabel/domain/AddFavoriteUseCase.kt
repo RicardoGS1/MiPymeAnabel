@@ -1,22 +1,17 @@
 package com.virtualworld.mipymeanabel.domain
 
-import com.virtualworld.mipymeanabel.data.databese.TodoDao
+import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 
-class AddFavoriteUseCase(private val db: TodoDao) {
+class AddFavoriteUseCase(private val repositoryImp: ProductRepository) {
 
 
-    suspend fun aa(){
+    suspend fun addFavorite(id: Long){
 
-//        db.insert(
-//
-//            TodoEntity(
-//                id = 1,
-//                title = "",
-//                content = "n"
-//            )
-//        )
 
-      println(db.count())
+        println(id)
+
+        repositoryImp.changerFavorite(id)
+
 
 
     }

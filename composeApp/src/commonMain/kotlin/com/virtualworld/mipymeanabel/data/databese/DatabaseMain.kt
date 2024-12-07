@@ -1,10 +1,9 @@
-package com.virtualworld.mipymeanabel.data.source.local
+package com.virtualworld.mipymeanabel.data.databese
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
-import com.virtualworld.mipymeanabel.data.databese.TodoDao
 import com.virtualworld.mipymeanabel.data.dto.ProductInfo
 
 @Database(entities = [ProductInfo::class], version = 1)

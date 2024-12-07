@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class ProductInfo(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val favorite: Boolean,
     val cart: Boolean,

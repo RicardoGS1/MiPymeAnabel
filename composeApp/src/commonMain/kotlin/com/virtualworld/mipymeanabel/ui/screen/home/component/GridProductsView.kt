@@ -37,12 +37,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.virtualworld.mipymeanabel.data.dto.Product
+import com.virtualworld.mipymeanabel.data.dto.ProductAll
 
 @Composable
 fun GridProducts(
     listState: LazyGridState,
-    products: List<Product>,
+    products: List<ProductAll>,
     onClickFavorite: (String) -> Unit
 ) {
     LazyVerticalGrid(
@@ -71,7 +71,7 @@ fun GridProducts(
 }
 
 @Composable
-fun ProductItem(product: Product, onProductClicked: () -> Unit, onFavoriteClicked: (String) -> Unit,) {
+fun ProductItem(product: ProductAll, onProductClicked: () -> Unit, onFavoriteClicked: (String) -> Unit,) {
 
    val isFavorite by remember { mutableStateOf(false) }
 
@@ -132,7 +132,7 @@ fun ProductItem(product: Product, onProductClicked: () -> Unit, onFavoriteClicke
                 .padding(0.dp) // Ajusta el padding según tus necesidades
         ) {
             Icon(
-                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder, // Cambia el icono según el estado de favorito
+                imageVector = if (product.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder, // Cambia el icono según el estado de favorito
                 contentDescription = "Agregar a favoritos",
                 tint = Color.Red,// O el color que desees
                 modifier = Modifier.size(32.dp)

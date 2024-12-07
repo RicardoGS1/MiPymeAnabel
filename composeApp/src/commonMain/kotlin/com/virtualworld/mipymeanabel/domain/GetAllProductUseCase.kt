@@ -1,17 +1,17 @@
 package com.virtualworld.mipymeanabel.domain
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.dto.Product
-import com.virtualworld.mipymeanabel.data.repository.remote.FirebaseRepository
+import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class GetAllProductUseCase(private val firebaseRepository: FirebaseRepository) {
+class GetAllProductUseCase(private val productRepository: ProductRepository) {
 
 
-    operator fun invoke(): Flow<NetworkResponseState<List<Product>>> {
+    operator fun invoke(): Flow<NetworkResponseState<List<ProductAll>>> {
 
-        return firebaseRepository.getAllProducts().map { products ->
+        return productRepository.getAllProducts().map { products ->
 
             when (products) {
                 is NetworkResponseState.Success -> {
