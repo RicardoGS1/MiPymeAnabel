@@ -22,3 +22,7 @@ object RouteProfile : AppDestinations {
 object RouteFavorite : AppDestinations {
     override val route = "favorite"
 }
+
+object RouteDetail : AppDestinations {
+    override val route = "detail"
+}

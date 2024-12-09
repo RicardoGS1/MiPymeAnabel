@@ -20,7 +20,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked: (String) -> Unit) {
 
     val products by homeViewModel.productsState.collectAsState()
     val categories by homeViewModel.categoryState.collectAsState()
@@ -38,6 +38,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
     val onClickFavorite = { id:String -> homeViewModel.onClickFavorite(id) }
 
 
+
     Surface(modifier = Modifier.fillMaxSize()) {
 
         Column() {
@@ -53,7 +54,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
             SelectCategory(categories, selectedCategory,updateSelectedCategory)
 
 
-            GridProducts(listState, products, onClickFavorite)
+            GridProducts(listState, products, onClickFavorite,onProductClicked)
 
         }
     }

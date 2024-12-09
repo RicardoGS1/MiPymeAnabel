@@ -2,6 +2,7 @@ package com.virtualworld.mipymeanabel.ui.screen.home.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +44,8 @@ import com.virtualworld.mipymeanabel.data.dto.ProductAll
 fun GridProducts(
     listState: LazyGridState,
     products: List<ProductAll>,
-    onClickFavorite: (String) -> Unit
+    onClickFavorite: (String) -> Unit,
+    onProductClicked: (String) -> Unit
 ) {
     LazyVerticalGrid(
         state = listState,
@@ -58,7 +60,7 @@ fun GridProducts(
         items(products, key = { it.idp }) {
             ProductItem(
                 product = it,
-                onProductClicked = {},
+                onProductClicked = onProductClicked,
                 onFavoriteClicked = onClickFavorite
             )
         }
@@ -71,11 +73,10 @@ fun GridProducts(
 }
 
 @Composable
-fun ProductItem(product: ProductAll, onProductClicked: () -> Unit, onFavoriteClicked: (String) -> Unit,) {
+fun ProductItem(product: ProductAll, onProductClicked: (String) -> Unit, onFavoriteClicked: (String) -> Unit,) {
 
-   val isFavorite by remember { mutableStateOf(false) }
 
-    Box(){
+    Box(Modifier.clickable { onProductClicked(product.idp) }){
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondary),
         elevation = CardDefaults.cardElevation(0.dp),

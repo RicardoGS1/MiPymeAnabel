@@ -105,6 +105,10 @@ class HomeViewModel(
 
     }
 
+    fun onClickProduct(id: String) {
+
+    }
+
 
 }
 
