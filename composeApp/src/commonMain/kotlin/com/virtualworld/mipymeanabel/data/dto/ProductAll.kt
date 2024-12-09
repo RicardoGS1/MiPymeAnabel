@@ -1,10 +1,6 @@
-package com.virtualworld.mipymeanabel.data.model
+package com.virtualworld.mipymeanabel.data.dto
 
-import kotlinx.serialization.Serializable
-
-
-@Serializable
-data class Product (
+data class ProductAll(
     val idp: String,
     val name: String,
     val priceMn: String,
@@ -12,5 +8,7 @@ data class Product (
     val detail:String,
     val available:String,
     val image:String,
-    val category:String
+    val category:String,
+    val favorite:Boolean= false,
+    val cart:Boolean= false
 )

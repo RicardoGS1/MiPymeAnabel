@@ -35,12 +35,12 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
 
     val updateSelectedCategory = { category: String -> homeViewModel.updateSelectedCategory(category) }
 
+    val onClickFavorite = { id:String -> homeViewModel.onClickFavorite(id) }
+
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
-
         Column() {
-
 
             AnimatedVisibility(visible = (searchBarVisible)  ) {
                 SearchBar(searchText,updateSearchText)
@@ -53,19 +53,11 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel()) {
             SelectCategory(categories, selectedCategory,updateSelectedCategory)
 
 
-            GridProducts(listState, products)
+            GridProducts(listState, products, onClickFavorite)
 
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 

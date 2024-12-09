@@ -3,7 +3,8 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,14 +14,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.text.contains
 
 class HomeViewModel(
-    private val getAllProductUseCase: GetAllProductUseCase
+    private val getAllProductUseCase: GetAllProductUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase
 ) : ViewModel() {
 
-    private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
-    val productsState: StateFlow<List<Product>> get() = filteredProductsState()
+    private val _allProducts = MutableStateFlow<List<ProductAll>>(emptyList())
+    val productsState: StateFlow<List<ProductAll>> get() = filteredProductsState()
 
     private val _categoryState = MutableStateFlow<List<String>>(emptyList())
     val categoryState: StateFlow<List<String>> get() = _categoryState.asStateFlow()
@@ -35,11 +36,13 @@ class HomeViewModel(
 
     init {
         getAllProducts()
+
     }
 
     private fun getAllProducts() {
 
         viewModelScope.launch {
+
 
             getAllProductUseCase().collect { listProducts ->
 
@@ -50,7 +53,8 @@ class HomeViewModel(
 
                         _allProducts.update { listProducts.result }
                         _categoryState.update {
-                            listOf("Todos") + _allProducts.value.map { it.category }.distinct()
+                            listOf("Todos", "Favorites") + _allProducts.value.map { it.category }
+                                .distinct()
                         }
 
                     }
@@ -60,14 +64,19 @@ class HomeViewModel(
 
         }
 
+
     }
 
-    private fun filteredProductsState(): StateFlow<List<Product>> =
-        combine(searchText, selectedCategoryState, _allProducts) { text, category, listAllProducts ->
+    private fun filteredProductsState(): StateFlow<List<ProductAll>> =
+        combine(
+            _searchText,
+            _selectedCategoryState,
+            _allProducts
+        ) { text, category, listAllProducts ->
 
             listAllProducts.filter { product ->
                 product.name.contains(text, ignoreCase = true) &&
-                        (product.category == category || category == "Todos")
+                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
             }
 
         }.stateIn(
@@ -85,6 +94,15 @@ class HomeViewModel(
         _selectedCategoryState.update {
             selected
         }
+    }
+
+    fun onClickFavorite(id: String) {
+
+        viewModelScope.launch {
+            addFavoriteUseCase.addFavorite(id.toLong())
+
+        }
+
     }
 
 

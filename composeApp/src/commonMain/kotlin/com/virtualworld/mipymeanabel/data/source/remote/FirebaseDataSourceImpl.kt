@@ -1,7 +1,7 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.model.Product
+import com.virtualworld.mipymeanabel.data.dto.Product
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
