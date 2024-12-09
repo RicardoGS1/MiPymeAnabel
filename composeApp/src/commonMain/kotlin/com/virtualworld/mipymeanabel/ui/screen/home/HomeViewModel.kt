@@ -53,9 +53,9 @@ class HomeViewModel(
 
                         _allProducts.update { listProducts.result }
                         _categoryState.update {
-                            listOf("Todos") + _allProducts.value.map { it.category }.distinct()
+                            listOf("Todos", "Favorites") + _allProducts.value.map { it.category }
+                                .distinct()
                         }
-                        println("kkk3"+_allProducts.value)
 
                     }
 
@@ -65,15 +65,18 @@ class HomeViewModel(
         }
 
 
-
     }
 
     private fun filteredProductsState(): StateFlow<List<ProductAll>> =
-        combine(searchText, selectedCategoryState, _allProducts) { text, category, listAllProducts ->
+        combine(
+            _searchText,
+            _selectedCategoryState,
+            _allProducts
+        ) { text, category, listAllProducts ->
 
             listAllProducts.filter { product ->
                 product.name.contains(text, ignoreCase = true) &&
-                        (product.category == category || category == "Todos")
+                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
             }
 
         }.stateIn(
