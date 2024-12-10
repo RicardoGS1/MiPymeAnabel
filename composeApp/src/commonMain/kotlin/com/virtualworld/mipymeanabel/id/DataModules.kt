@@ -10,6 +10,7 @@ import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
 import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
+import com.virtualworld.mipymeanabel.domain.GetProductByIdUseCase
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.dsl.factoryOf
@@ -35,6 +36,7 @@ val dataModules = module {
 
     factoryOf (::GetAllProductUseCase)
     factoryOf(::AddFavoriteUseCase)
+    factoryOf (::GetProductByIdUseCase)
 
 
 }

@@ -9,9 +9,10 @@ class GetProductByIdUseCase(private val productRepository: ProductRepository) {
 
    suspend operator fun invoke(productId: String): NetworkResponseState<ProductAll> {
 
-       delay(5000)
 
-       return NetworkResponseState.Success(ProductAll())
+       val a = productRepository.getProductById(productId)
+
+       return a
 
     }
 

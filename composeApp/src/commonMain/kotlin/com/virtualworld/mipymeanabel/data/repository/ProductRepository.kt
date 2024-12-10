@@ -12,4 +12,7 @@ interface ProductRepository {
 
     fun getAllProducts(): Flow<NetworkResponseState<List<ProductAll>>>
 
+    suspend fun getProductById(productId: String): NetworkResponseState<ProductAll>
+
+
 }

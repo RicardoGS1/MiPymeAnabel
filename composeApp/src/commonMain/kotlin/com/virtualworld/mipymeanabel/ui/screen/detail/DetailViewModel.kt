@@ -17,7 +17,7 @@ class DetailViewModel( private val productId : String, private val getProductByI
 
 
     private val _productState = MutableStateFlow<ProductAll>(ProductAll())
-    val productState: StateFlow<ProductAll> get() = _productState
+    val productState: StateFlow<ProductAll> get() = _productState.asStateFlow()
 
     init {
         getProductById()
@@ -29,11 +29,16 @@ class DetailViewModel( private val productId : String, private val getProductByI
 
            val result = getProductByIdUseCase(productId)
 
+            println(result)
+
+            println("sigio sin respuesta")
+
             when(result){
                 is NetworkResponseState.Error -> TODO()
                 NetworkResponseState.Loading -> TODO()
                 is NetworkResponseState.Success -> _productState.update {
-                    it
+
+                    result.result
                 }
             }
 
