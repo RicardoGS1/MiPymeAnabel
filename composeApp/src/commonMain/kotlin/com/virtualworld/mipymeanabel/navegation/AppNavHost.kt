@@ -37,8 +37,9 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
         composable(RouteCart.route) {
             CartScreen()
         }
+        //+"/{productId}"
         composable(
-            RouteDetail.route + "/{productId}",
+            RouteDetail.route+"/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
         ) { navBackStackEntry->
             val productId = navBackStackEntry.arguments?.getString("productId")
