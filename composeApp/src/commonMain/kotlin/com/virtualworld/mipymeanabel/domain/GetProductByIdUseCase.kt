@@ -12,6 +12,8 @@ class GetProductByIdUseCase(private val productRepository: ProductRepository) {
 
        val a = productRepository.getProductById(productId)
 
+       println(a)
+
        return a
 
     }

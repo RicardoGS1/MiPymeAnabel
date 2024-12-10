@@ -12,6 +12,12 @@ class RoomDataSource(private val todoDao: TodoDao) {
 
     }
 
+    suspend fun getInfoProductById(id :Long): ProductInfo {
+
+        return todoDao.getInfoProductById(id)
+
+    }
+
     suspend fun updateFavorite(productInfo: ProductInfo){
         todoDao.insert(productInfo)
     }

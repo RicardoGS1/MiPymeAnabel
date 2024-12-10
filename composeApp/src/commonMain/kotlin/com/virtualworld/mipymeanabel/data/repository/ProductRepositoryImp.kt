@@ -71,15 +71,22 @@ class ProductRepositoryImp(
 
     override suspend fun getProductById(productId: String): NetworkResponseState<ProductAll> {
 
-       val result = firebaseDataSource.getProductById(productId)
+        val result = firebaseDataSource.getProductById(productId)
 
-       return when(result){
+        return when (result) {
             is NetworkResponseState.Error -> {
-                println("errrrrror")
-                 NetworkResponseState.Error(Exception("dd"))}
-            NetworkResponseState.Loading -> { NetworkResponseState.Loading}
+                NetworkResponseState.Error(Exception("dd"))
+            }
+
+            NetworkResponseState.Loading -> {
+                NetworkResponseState.Loading
+            }
+
             is NetworkResponseState.Success -> {
-                NetworkResponseState.Success( result.result.toProductAll(false,false))
+
+                val a = roomDataSource.getInfoProductById(productId.toLong())
+
+                NetworkResponseState.Success(result.result.toProductAll(a.favorite, a.cart))
             }
         }
 
