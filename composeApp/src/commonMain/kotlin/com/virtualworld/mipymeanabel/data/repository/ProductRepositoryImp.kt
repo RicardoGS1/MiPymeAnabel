@@ -70,31 +70,38 @@ class ProductRepositoryImp(
         }
     }
 
-    override fun getProductById(productId: String): Flow< NetworkResponseState<ProductAll>> =
+    override fun getProductById(productId: String): Flow<NetworkResponseState<ProductAll>> =
 
         flow {
 
             val result = firebaseDataSource.getProductById(productId)
 
             when (result) {
-            is NetworkResponseState.Error -> {
-               emit( NetworkResponseState.Error(Exception("dd")))
-            }
-
-            NetworkResponseState.Loading -> {
-               emit( NetworkResponseState.Loading)
-            }
-
-            is NetworkResponseState.Success -> {
-
-                val a = roomDataSource.getInfoProductById(productId.toLong()).collect{
-                   emit( NetworkResponseState.Success(result.result.toProductAll(it.favorite, it.cart)))
+                is NetworkResponseState.Error -> {
+                    emit(NetworkResponseState.Error(Exception("dd")))
                 }
 
-            }
-        }
+                NetworkResponseState.Loading -> {
+                    emit(NetworkResponseState.Loading)
+                }
 
-    }
+                is NetworkResponseState.Success -> {
+
+                    roomDataSource.getInfoProductById(productId.toLong()).collect {
+                        emit(
+                            NetworkResponseState.Success(
+                                result.result.toProductAll(
+                                    it?.favorite ?: false,
+                                    it?.cart ?: false
+                                )
+                            )
+                        )
+                    }
+
+                }
+            }
+
+        }
 
 }
 
