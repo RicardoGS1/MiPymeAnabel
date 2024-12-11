@@ -94,7 +94,7 @@ Box(){
 
     ) {
 
-        Text( if(productState.cart)"Add to Cart" else "Remover del carro"  )
+        Text( if(!productState.cart)"Add to Cart" else "Remover del carro" )
     }
 }
 }
