@@ -12,4 +12,7 @@ interface ProductRepository {
 
     fun getAllProducts(): Flow<NetworkResponseState<List<ProductAll>>>
 
+    fun getProductById(productId: String): Flow< NetworkResponseState<ProductAll>>
+
+
 }

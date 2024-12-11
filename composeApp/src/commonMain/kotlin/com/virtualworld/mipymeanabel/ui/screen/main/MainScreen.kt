@@ -23,7 +23,7 @@ fun MainScreen() {
 
         Scaffold(
             bottomBar = { BottomBarView(navController) },
-            topBar = { TopBarView(scrollBehavior) },
+            topBar = { TopBarView(scrollBehavior, navController) },
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddingValues ->
 

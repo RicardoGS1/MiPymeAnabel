@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.Flow
 class RoomDataSource(private val todoDao: TodoDao) {
 
     fun getInfoProducts() : Flow<List<ProductInfo>> {
-
       return  todoDao.getAllProductInfoFlow()
-
     }
 
-    suspend fun updateFavorite(productInfo: ProductInfo){
+    fun getInfoProductById(id :Long): Flow<ProductInfo?> {
+        return todoDao.getInfoProductById(id)
+    }
+
+    suspend fun updateInfoProduct(productInfo: ProductInfo){
         todoDao.insert(productInfo)
     }
 

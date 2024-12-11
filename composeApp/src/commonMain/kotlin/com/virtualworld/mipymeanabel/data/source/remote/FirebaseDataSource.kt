@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface FirebaseDataSource {
 
     fun getAllProducts() : Flow<NetworkResponseState<List<Product>>>
+
+    suspend fun getProductById(productId: String): NetworkResponseState<Product>
 }

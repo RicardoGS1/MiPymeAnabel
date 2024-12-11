@@ -8,6 +8,7 @@ import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 
 class ProductRepositoryImp(
     private val firebaseDataSource: FirebaseDataSource,
@@ -19,12 +20,18 @@ class ProductRepositoryImp(
 
 
     override suspend fun changerCart(id: Long) {
-        TODO("Not yet implemented")
+        roomDataSource.updateInfoProduct(
+            ProductInfo(
+                id = id,
+                favorite = favoriteMap[id] ?: false,
+                cart = !(cartMap[id] ?: false),
+            )
+        )
     }
 
     override suspend fun changerFavorite(id: Long) {
 
-        roomDataSource.updateFavorite(
+        roomDataSource.updateInfoProduct(
             ProductInfo(
                 id = id,
                 favorite = !(favoriteMap[id] ?: false),
@@ -68,6 +75,39 @@ class ProductRepositoryImp(
 
         }
     }
+
+    override fun getProductById(productId: String): Flow<NetworkResponseState<ProductAll>> =
+
+        flow {
+
+            val result = firebaseDataSource.getProductById(productId)
+
+            when (result) {
+                is NetworkResponseState.Error -> {
+                    emit(NetworkResponseState.Error(Exception("dd")))
+                }
+
+                NetworkResponseState.Loading -> {
+                    emit(NetworkResponseState.Loading)
+                }
+
+                is NetworkResponseState.Success -> {
+
+                    roomDataSource.getInfoProductById(productId.toLong()).collect {
+                        emit(
+                            NetworkResponseState.Success(
+                                result.result.toProductAll(
+                                    it?.favorite ?: false,
+                                    it?.cart ?: false
+                                )
+                            )
+                        )
+                    }
+
+                }
+            }
+
+        }
 
 }
 
