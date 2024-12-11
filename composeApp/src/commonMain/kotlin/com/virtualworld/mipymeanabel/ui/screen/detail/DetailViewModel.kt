@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetProductByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DetailViewModel( private val productId : String, private val getProductByIdUseCase: GetProductByIdUseCase ) : ViewModel() {
+class DetailViewModel( private val productId : String, private val getProductByIdUseCase: GetProductByIdUseCase, private val addFavoriteUseCase: AddFavoriteUseCase) : ViewModel() {
 
 
     private val _productState = MutableStateFlow<ProductAll>(ProductAll())
@@ -25,20 +26,28 @@ class DetailViewModel( private val productId : String, private val getProductByI
 
         viewModelScope.launch {
 
-           val result = getProductByIdUseCase(productId)
+          getProductByIdUseCase(productId).collect{ prduct->
 
-            println(result)
+               when(prduct){
+                   is NetworkResponseState.Error -> TODO()
+                   NetworkResponseState.Loading -> TODO()
+                   is NetworkResponseState.Success -> _productState.update {
 
-            println("sigio sin respuesta")
+                       prduct.result
+                   }
+               }
 
-            when(result){
-                is NetworkResponseState.Error -> TODO()
-                NetworkResponseState.Loading -> TODO()
-                is NetworkResponseState.Success -> _productState.update {
 
-                    result.result
-                }
-            }
+           }
+
+        }
+
+    }
+
+    fun onClickFavorite(id: String) {
+
+        viewModelScope.launch {
+            addFavoriteUseCase.addFavorite(id.toLong())
 
         }
 

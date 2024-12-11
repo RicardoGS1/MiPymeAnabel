@@ -8,6 +8,7 @@ import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 
 class ProductRepositoryImp(
     private val firebaseDataSource: FirebaseDataSource,
@@ -69,24 +70,27 @@ class ProductRepositoryImp(
         }
     }
 
-    override suspend fun getProductById(productId: String): NetworkResponseState<ProductAll> {
+    override fun getProductById(productId: String): Flow< NetworkResponseState<ProductAll>> =
 
-        val result = firebaseDataSource.getProductById(productId)
+        flow {
 
-        return when (result) {
+            val result = firebaseDataSource.getProductById(productId)
+
+            when (result) {
             is NetworkResponseState.Error -> {
-                NetworkResponseState.Error(Exception("dd"))
+               emit( NetworkResponseState.Error(Exception("dd")))
             }
 
             NetworkResponseState.Loading -> {
-                NetworkResponseState.Loading
+               emit( NetworkResponseState.Loading)
             }
 
             is NetworkResponseState.Success -> {
 
-                val a = roomDataSource.getInfoProductById(productId.toLong())
+                val a = roomDataSource.getInfoProductById(productId.toLong()).collect{
+                   emit( NetworkResponseState.Success(result.result.toProductAll(it.favorite, it.cart)))
+                }
 
-                NetworkResponseState.Success(result.result.toProductAll(a.favorite, a.cart))
             }
         }
 

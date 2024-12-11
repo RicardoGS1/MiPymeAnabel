@@ -1,8 +1,5 @@
 package com.virtualworld.mipymeanabel.ui.screen.detail
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,6 +34,8 @@ import coil3.compose.AsyncImage
 fun DetailScreen( detailViewModel : DetailViewModel ){
 
     val productState by detailViewModel.productState.collectAsState()
+    val onClickFavorite = { id:String -> detailViewModel.onClickFavorite(id) }
+
 Box(){
     Column(modifier = Modifier
         .fillMaxSize()) {
@@ -53,7 +50,7 @@ Box(){
 
             )
             IconButton(
-                onClick = { },//onFavoriteClicked(product.idp) },
+                onClick = { onClickFavorite(productState.idp) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(0.dp) // Ajusta el padding según tus necesidades

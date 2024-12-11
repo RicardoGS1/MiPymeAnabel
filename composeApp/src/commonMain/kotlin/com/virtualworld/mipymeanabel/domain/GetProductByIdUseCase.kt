@@ -4,10 +4,10 @@ import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
 import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
 class GetProductByIdUseCase(private val productRepository: ProductRepository) {
-
-   suspend operator fun invoke(productId: String): NetworkResponseState<ProductAll> {
+    operator fun invoke(productId: String): Flow<NetworkResponseState<ProductAll>> {
 
 
        val a = productRepository.getProductById(productId)

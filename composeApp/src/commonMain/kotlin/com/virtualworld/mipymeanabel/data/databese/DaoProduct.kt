@@ -20,6 +20,6 @@ interface TodoDao {
     fun getAllProductInfoFlow(): Flow<List<ProductInfo>>
 
     @Query("SELECT *  FROM ProductInfo WHERE id = :id ")
-    suspend fun getInfoProductById(id : Long) : ProductInfo
+    fun getInfoProductById(id : Long) : Flow<ProductInfo>
 
 }

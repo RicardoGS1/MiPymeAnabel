@@ -12,7 +12,7 @@ class RoomDataSource(private val todoDao: TodoDao) {
 
     }
 
-    suspend fun getInfoProductById(id :Long): ProductInfo {
+    fun getInfoProductById(id :Long): Flow<ProductInfo> {
 
         return todoDao.getInfoProductById(id)
 
