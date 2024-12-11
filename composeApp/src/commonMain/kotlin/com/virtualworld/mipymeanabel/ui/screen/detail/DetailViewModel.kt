@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.AddCartUseCase
 import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetProductByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DetailViewModel( private val productId : String, private val getProductByIdUseCase: GetProductByIdUseCase, private val addFavoriteUseCase: AddFavoriteUseCase) : ViewModel() {
+class DetailViewModel( private val productId : String, private val getProductByIdUseCase: GetProductByIdUseCase, private val addFavoriteUseCase: AddFavoriteUseCase, private val addCartUseCase: AddCartUseCase) : ViewModel() {
 
 
     private val _productState = MutableStateFlow<ProductAll>(ProductAll())
@@ -48,6 +49,15 @@ class DetailViewModel( private val productId : String, private val getProductByI
 
         viewModelScope.launch {
             addFavoriteUseCase.addFavorite(id.toLong())
+
+        }
+
+    }
+
+    fun onClickAddCart(id: String) {
+
+        viewModelScope.launch {
+            addCartUseCase.addCart(id.toLong())
 
         }
 

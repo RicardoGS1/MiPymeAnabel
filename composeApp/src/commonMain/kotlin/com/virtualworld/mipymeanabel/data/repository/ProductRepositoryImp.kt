@@ -20,12 +20,18 @@ class ProductRepositoryImp(
 
 
     override suspend fun changerCart(id: Long) {
-        TODO("Not yet implemented")
+        roomDataSource.updateInfoProduct(
+            ProductInfo(
+                id = id,
+                favorite = favoriteMap[id] ?: false,
+                cart = !(cartMap[id] ?: false),
+            )
+        )
     }
 
     override suspend fun changerFavorite(id: Long) {
 
-        roomDataSource.updateFavorite(
+        roomDataSource.updateInfoProduct(
             ProductInfo(
                 id = id,
                 favorite = !(favoriteMap[id] ?: false),

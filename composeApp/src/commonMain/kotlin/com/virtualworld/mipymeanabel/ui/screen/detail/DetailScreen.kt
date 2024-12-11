@@ -86,14 +86,15 @@ Box(){
     }
 
     Button(
-        onClick = { /* Agregar producto al carrito */ },
+        onClick = { detailViewModel.onClickAddCart(productState.idp) },
         shape =  RoundedCornerShape(8.dp) ,
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(16.dp).fillMaxWidth()
 
     ) {
-        Text("Add to Cart")
+
+        Text( if(productState.cart)"Add to Cart" else "Remover del carro"  )
     }
 }
 }
