@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -38,7 +40,7 @@ fun DetailScreen( detailViewModel : DetailViewModel ){
 
 Box(){
     Column(modifier = Modifier
-        .fillMaxSize()) {
+        .fillMaxSize().verticalScroll(rememberScrollState())) {
         Box() {
             AsyncImage(
                 model = productState.image,
@@ -73,9 +75,12 @@ Box(){
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = productState.detail)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Price: $${productState.priceMn} MN", style  = MaterialTheme.typography.titleMedium, )
+            Text(
+                text = "Price: $${productState.priceMn} MN",
+                style = MaterialTheme.typography.titleMedium
+            )
             Text(text = "Price: $${productState.priceUsd} USD", style  = MaterialTheme.typography.titleMedium)
-
+            Spacer(modifier = Modifier.height(40.dp))
         }
 
     }
