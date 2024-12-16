@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.pow
 
 class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : ViewModel() {
 
@@ -16,6 +17,9 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
     private val _quantity = MutableStateFlow<Map<Long, Int>>(emptyMap())
     val quantity: StateFlow<Map<Long, Int>> get() = _quantity
+
+    private val _totals = MutableStateFlow<Map<String, Float>>(emptyMap())
+    val totals: StateFlow<Map<String, Float>> get() = _totals
 
     init {
         getProductsCart()
@@ -35,6 +39,7 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
                     _quantity.update {
                         products.associate { it.idp to 1 }
                     }
+                getTotals()
 
             }
 
@@ -43,6 +48,34 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
     }
 
+    fun getTotals() {
+
+        var totalUSD = 0f
+        var totalMN = 0f
+        var units = 0f
+
+        _quantity.value.forEach { quant ->
+
+            val priceUSD = _products.value.first { quant.key == it.idp }.priceUSD
+
+            val priceMN = _products.value.first { quant.key == it.idp }.priceMN
+
+            totalUSD += priceUSD * quant.value
+
+            totalMN += priceMN * quant.value
+
+            units += quant.value
+
+
+        }
+
+        _totals.update {
+            mapOf("totalUSD" to totalUSD.roundToDecimals(2))  +  mapOf("totalMN" to totalMN.roundToDecimals(2))  +  mapOf("units" to units)
+
+        }
+
+
+    }
 
     fun updateQuantity(idp: Long, unit: Int) {
 
@@ -55,7 +88,15 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
                 currentQuantity
         }
 
+        getTotals()
+
     }
 
 
+}
+
+
+fun Float.roundToDecimals(decimals: Int): Float {
+    val multiplier = 10.0f.pow(decimals) // Usar Float para el multiplicador
+    return kotlin.math.round(this * multiplier) / multiplier
 }

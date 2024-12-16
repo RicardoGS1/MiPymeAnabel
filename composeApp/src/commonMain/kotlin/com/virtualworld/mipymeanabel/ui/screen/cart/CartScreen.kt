@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
     val quantity by cartViewModel.quantity.collectAsStateWithLifecycle()
 
+    val totals by cartViewModel.totals.collectAsStateWithLifecycle()
 
     val products by cartViewModel.productsState.collectAsStateWithLifecycle()
 
@@ -56,11 +58,30 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
         }
 
+        item {
 
+            Column(modifier = Modifier.padding(18.dp)) {
 
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
+                    Text(text = "Total en USD", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
+                    Text(text= totals.get("totalUSD").toString() + "USD",style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
+                    Text(text = "Total en MN", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
+                    Text(text= totals.get("totalMN").toString() + "MN",style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
+                Text(text = "Unidades", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
+                    Text(text= totals.get("units")?.toInt().toString(), style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
+                }
+
+            }
+
+        }
 
     }
-
 
 }
 
