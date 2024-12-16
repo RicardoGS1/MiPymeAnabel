@@ -12,6 +12,7 @@ import com.virtualworld.mipymeanabel.domain.AddCartUseCase
 import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.GetProductByIdUseCase
+import com.virtualworld.mipymeanabel.domain.GetProductCartUseCase
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.dsl.factoryOf
@@ -39,6 +40,7 @@ val dataModules = module {
     factoryOf(::AddFavoriteUseCase)
     factoryOf (::GetProductByIdUseCase)
     factoryOf (::AddCartUseCase)
+    factoryOf(::GetProductCartUseCase)
 
 }
 

@@ -35,7 +35,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             HomeScreen(onProductClicked = onProductClicked)
         }
         composable(RouteCart.route) {
-            CartScreen()
+            CartScreen(cartViewModel = koinViewModel()  )
         }
         //+"/{productId}"
         composable(
