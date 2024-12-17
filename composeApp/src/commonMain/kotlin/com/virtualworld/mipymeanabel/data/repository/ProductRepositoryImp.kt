@@ -1,14 +1,18 @@
 package com.virtualworld.mipymeanabel.data.repository
 
 import com.virtualworld.mipymeanabel.data.NetworkResponseState
+import com.virtualworld.mipymeanabel.data.dto.Product
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
 import com.virtualworld.mipymeanabel.data.dto.ProductInfo
 import com.virtualworld.mipymeanabel.data.mapper.toProductAll
+import com.virtualworld.mipymeanabel.data.mapper.toProductCart
 import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
+import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class ProductRepositoryImp(
     private val firebaseDataSource: FirebaseDataSource,
@@ -17,6 +21,7 @@ class ProductRepositoryImp(
 
     private var favoriteMap: Map<Long, Boolean> = emptyMap()
     private var cartMap: Map<Long, Boolean> = emptyMap()
+    private val productCache = mutableMapOf<Long, Product>()
 
 
     override suspend fun changerCart(id: Long) {
@@ -59,6 +64,8 @@ class ProductRepositoryImp(
 
 
                     val productAlll = firebase.result.map {
+
+                        productCache[it.idp.toLong()] = it
 
                         val favorite = favoriteMap[it.idp.toLong()]
                         val cart = cartMap[it.idp.toLong()]
@@ -108,6 +115,20 @@ class ProductRepositoryImp(
             }
 
         }
+
+    override fun getProductCart(): Flow<List<ProductCart>> {
+
+        return roomDataSource.getInfoProducts().map { productInfo ->
+
+             productInfo.filter { it.cart }.mapNotNull {
+                 productCache[it.id]?.toProductCart()
+
+                }
+
+            }
+        }
+
+
 
 }
 
