@@ -92,6 +92,10 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
     }
 
+    fun onClickAddOrder() {
+
+    }
+
 
 }
 

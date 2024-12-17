@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.ui.screen.cart
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,7 +33,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,41 +49,88 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
     val products by cartViewModel.productsState.collectAsStateWithLifecycle()
 
-    val updateQuantity={idp: Long, unit : Int -> cartViewModel.updateQuantity(idp,unit)   }
+    val updateQuantity = { idp: Long, unit: Int -> cartViewModel.updateQuantity(idp, unit) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-        items(products, key = { it.idp }) { product ->
-
-            ItemProduct(product, updateQuantity, quantity)
-
-        }
-
-        item {
-
-            Column(modifier = Modifier.padding(18.dp)) {
-
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
-                    Text(text = "Total en USD", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
-                    Text(text= totals.get("totalUSD").toString() + "USD",style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
-                }
-
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
-                    Text(text = "Total en MN", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
-                    Text(text= totals.get("totalMN").toString() + "MN",style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
-                }
-
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween ) {
-                Text(text = "Unidades", style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ))
-                    Text(text= totals.get("units")?.toInt().toString(), style = MaterialTheme.typography.titleLarge.copy( fontWeight = FontWeight.Bold  ), color = MaterialTheme.colorScheme.primary)
-                }
-
+            items(products, key = { it.idp }) { product ->
+                ItemProduct(product, updateQuantity, quantity)
             }
 
+            item {
+                Totals(totals)
+            }
+        }
+
+        Button(
+            onClick = { cartViewModel.onClickAddOrder() },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp).fillMaxWidth()
+
+        ) {
+
+            Text("Realizar pedido")
+        }
+    }
+}
+
+@Composable
+private fun Totals(totals: Map<String, Float>) {
+
+
+    val fontIndices = MaterialTheme.typography.titleLarge.copy()
+
+    Column(modifier = Modifier.padding(18.dp)) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Total en USD",
+                style = fontIndices
+            )
+            Text(
+                text = totals.get("totalUSD").toString() + "USD",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Total en MN",
+                style = fontIndices
+            )
+            Text(
+                text = totals.get("totalMN").toString() + "MN",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Unidades",
+                style = fontIndices
+            )
+            Text(
+                text = totals.get("units")?.toInt().toString(),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
 
     }
-
 }
 
 
@@ -136,7 +184,6 @@ private fun ItemProduct(
 }
 
 
-
 @Composable
 private fun Quantity(
     updateQuantity: (Long, Int) -> Unit,
@@ -148,7 +195,7 @@ private fun Quantity(
         modifier = Modifier.padding(bottom = 4.dp)
     ) {
         Button(
-            onClick = { updateQuantity(product.idp,-1) },
+            onClick = { updateQuantity(product.idp, -1) },
             modifier = Modifier.border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.primary
@@ -170,7 +217,7 @@ private fun Quantity(
         }
 
         Text(
-            text = quantity[product.idp] .toString(),
+            text = quantity[product.idp].toString(),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.height(42.dp).wrapContentWidth()
