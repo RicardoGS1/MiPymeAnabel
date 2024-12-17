@@ -11,11 +11,24 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.compose.rememberNavController
 import com.virtualworld.mipymeanabel.navegation.AppNavHost
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
 
     val navController = rememberNavController()
+
+
+
+
+//
+//    BackHandler {
+//        // Navega a la pantalla de inicio
+//        navController.popBackStack(
+//            navController.graph.startDestinationRoute ,
+//            false // inclusive: false para no incluir la pantalla de inicio en la eliminación
+//        )
+//    }
 
 
     Surface(modifier = Modifier.fillMaxSize()) {
