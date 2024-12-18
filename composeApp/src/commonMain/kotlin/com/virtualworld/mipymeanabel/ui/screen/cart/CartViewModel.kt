@@ -40,14 +40,11 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
                         _quantity.update {
                             products.associate { it.idp to 1 }
                         }
-
-
                     }
-
 
                 }
 
-                getTotals()
+                     getTotals()
 
             }
 
@@ -60,20 +57,19 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
         var totalMN = 0f
         var units = 0f
 
-        _quantity.value.forEach { quant ->
+        _products.value.forEach { prod->
 
-            val priceUSD = _products.value.first { quant.key == it.idp }.priceUSD
+            val priceUSD = prod.priceUSD
+            val priceMN = prod.priceMN
 
-            val priceMN = _products.value.first { quant.key == it.idp }.priceMN
+            totalUSD += priceUSD*_quantity.value[prod.idp]!!
 
-            totalUSD += priceUSD * quant.value
+            totalMN += priceMN*_quantity.value[prod.idp]!!
 
-            totalMN += priceMN * quant.value
-
-            units += quant.value
-
+            units += _quantity.value[prod.idp]!!
 
         }
+
 
         _totals.update {
             mapOf("totalUSD" to totalUSD.roundToDecimals(2)) + mapOf(
@@ -111,6 +107,6 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
 
 fun Float.roundToDecimals(decimals: Int): Float {
-    val multiplier = 10.0f.pow(decimals) // Usar Float para el multiplicador
+    val multiplier = 10.0f.pow(decimals)
     return kotlin.math.round(this * multiplier) / multiplier
 }
