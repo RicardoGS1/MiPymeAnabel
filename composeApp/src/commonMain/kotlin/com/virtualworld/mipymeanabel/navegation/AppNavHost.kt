@@ -28,7 +28,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
     ) {
 
         val onProductClicked: (String) -> Unit = { productId ->
-            navController.navigate(RouteDetail.route + "/$productId")
+            navController.navigateToDetailDestination(RouteDetail.route + "/$productId")
         }
 
         composable(RouteHome.route) {

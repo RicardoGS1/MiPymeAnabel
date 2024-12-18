@@ -13,3 +13,16 @@ fun NavController.navigateToBottomNavDestination(item: BottomNavItem) {
         launchSingleTop = true
     }
 }
+
+fun NavController.navigateToDetailDestination(screen: String) {
+
+    navigate(screen) {
+        popUpTo(graph.findStartDestination().route!! ) {
+            this.saveState = true
+        }
+        restoreState = false
+        launchSingleTop = false
+    }
+
+
+}
