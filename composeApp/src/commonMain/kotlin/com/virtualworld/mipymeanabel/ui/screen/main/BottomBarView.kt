@@ -2,10 +2,12 @@ package com.virtualworld.mipymeanabel.ui.screen.main
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,9 @@ fun BottomBarView(navHostController: NavHostController) {
     val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
+
+
+
     LaunchedEffect(key1 = currentRoute) {
         selectedItemIndex.value = items.indexOfFirst { it.route == currentRoute }
     }
@@ -40,9 +45,9 @@ fun BottomBarView(navHostController: NavHostController) {
 
     NavigationBar(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface) // Color de fondo
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)) // Esquinas redondeadas
-            .shadow(elevation = 4.dp),
+            .background(MaterialTheme.colorScheme.surface)
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .shadow(elevation = 4.dp).height(100.dp) ,
     ) {
 
         items.forEachIndexed { index, item ->
