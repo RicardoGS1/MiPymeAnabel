@@ -35,20 +35,26 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
                     products
                 }
 
-                if (_quantity.value.isEmpty())
-                    _quantity.update {
-                        products.associate { it.idp to 1 }
+                for (product in products) {
+                    if (_quantity.value[product.idp] == null) { //  _quantity.value.isEmpty())
+                        _quantity.update {
+                            products.associate { it.idp to 1 }
+                        }
+
+
                     }
+
+
+                }
+
                 getTotals()
 
             }
 
-
         }
-
     }
 
-    fun getTotals() {
+    private fun getTotals() {
 
         var totalUSD = 0f
         var totalMN = 0f
@@ -70,7 +76,11 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
         }
 
         _totals.update {
-            mapOf("totalUSD" to totalUSD.roundToDecimals(2))  +  mapOf("totalMN" to totalMN.roundToDecimals(2))  +  mapOf("units" to units)
+            mapOf("totalUSD" to totalUSD.roundToDecimals(2)) + mapOf(
+                "totalMN" to totalMN.roundToDecimals(
+                    2
+                )
+            ) + mapOf("units" to units)
 
         }
 
