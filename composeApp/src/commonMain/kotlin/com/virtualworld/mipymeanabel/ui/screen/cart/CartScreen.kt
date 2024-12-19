@@ -38,20 +38,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shader
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -63,7 +56,7 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel) {
+fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit) {
 
 
     val quantity by cartViewModel.quantity.collectAsStateWithLifecycle()
@@ -107,7 +100,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
         LazyColumn() {
             items(products, key = { it.idp }) { product ->
-                ItemProduct(product, updateQuantity, quantity)
+                ItemProduct(product, updateQuantity, quantity,onProductClicked)
             }
 
             item {
@@ -249,8 +242,10 @@ private fun Totals(totals: Map<String, Float>) {
 private fun ItemProduct(
     product: ProductCart,
     updateQuantity: (Long, Int) -> Unit,
-    quantity: Map<Long, Int>
-) {
+    quantity: Map<Long, Int>,
+    onProductClicked: (String) -> Unit,
+
+    ) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
             .padding(vertical = 4.dp).height(120.dp),
@@ -267,7 +262,7 @@ private fun ItemProduct(
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight().aspectRatio(2 / 2f)
-                    .padding(4.dp).clip(MaterialTheme.shapes.small)
+                    .padding(4.dp).clip(MaterialTheme.shapes.small).clickable { onProductClicked( product.idp.toString() ) }
             )
 
             Column(

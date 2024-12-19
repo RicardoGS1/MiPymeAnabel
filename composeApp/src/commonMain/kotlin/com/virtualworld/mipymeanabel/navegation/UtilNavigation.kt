@@ -9,7 +9,7 @@ fun NavController.navigateToBottomNavDestination(item: BottomNavItem) {
         popUpTo(graph.findStartDestination().route!! ) {
             this.saveState = true
         }
-        restoreState = true
+        restoreState = false
         launchSingleTop = true
     }
 }
@@ -17,11 +17,7 @@ fun NavController.navigateToBottomNavDestination(item: BottomNavItem) {
 fun NavController.navigateToDetailDestination(screen: String) {
 
     navigate(screen) {
-        popUpTo(graph.findStartDestination().route!! ) {
-            this.saveState = true
-        }
-        restoreState = false
-        launchSingleTop = false
+
     }
 
 

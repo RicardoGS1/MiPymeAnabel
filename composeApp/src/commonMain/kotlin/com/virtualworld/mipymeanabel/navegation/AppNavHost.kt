@@ -35,13 +35,13 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             HomeScreen(onProductClicked = onProductClicked)
         }
         composable(RouteCart.route) {
-            CartScreen(cartViewModel = koinViewModel()  )
+            CartScreen(cartViewModel = koinViewModel(), onProductClicked = onProductClicked)
         }
         //+"/{productId}"
         composable(
-            RouteDetail.route+"/{productId}",
+            RouteDetail.route + "/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
-        ) { navBackStackEntry->
+        ) { navBackStackEntry ->
             val productId = navBackStackEntry.arguments?.getString("productId")
             DetailScreen(detailViewModel = koinViewModel(parameters = { parametersOf(productId) }))
         }
