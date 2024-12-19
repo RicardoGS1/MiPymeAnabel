@@ -45,9 +45,9 @@ fun BottomBarView(navHostController: NavHostController) {
 
     NavigationBar(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            .shadow(elevation = 4.dp).height(100.dp) ,
+            .height(100.dp) ,
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
 
         items.forEachIndexed { index, item ->
