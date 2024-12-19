@@ -6,6 +6,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -151,11 +152,10 @@ fun CartScreen(cartViewModel: CartViewModel) {
                     Button(
                         onClick = {
                             cartViewModel.onClickAddOrder()
-                            // ... (código para la lógica del clic)
                         },
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(32.dp),
                         modifier = Modifier
-                            .padding(6.dp)
+                            .padding(2.dp)
                             .graphicsLayer {
                                 scaleX = animatedScale
                                 scaleY = animatedScale
@@ -204,7 +204,7 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("totalUSD").toString() + " USD",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -219,7 +219,7 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("totalMN").toString() + " MN",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -234,7 +234,7 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("units")?.toInt().toString(),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge ,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -309,9 +309,10 @@ private fun Quantity(
             onClick = { updateQuantity(product.idp, -1) },
             modifier = Modifier.border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
             ).size(42.dp),
-            shape = RectangleShape,
+            shape = RectangleShape ,
             contentPadding = PaddingValues(2.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
@@ -341,7 +342,8 @@ private fun Quantity(
             onClick = { updateQuantity(product.idp, 1) },
             modifier = Modifier.border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)
             ).size(42.dp),
             shape = RectangleShape,
             contentPadding = PaddingValues(2.dp),
