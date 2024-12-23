@@ -47,8 +47,8 @@ class HomeViewModel(
             getAllProductUseCase().collect { listProducts ->
 
                 when (listProducts) {
-                    is NetworkResponseState.Error -> TODO()
-                    NetworkResponseState.Loading -> TODO()
+                    is NetworkResponseState.Error -> {}
+                    NetworkResponseState.Loading -> {}
                     is NetworkResponseState.Success -> {
 
                         _allProducts.update { listProducts.result }
