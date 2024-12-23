@@ -1,12 +1,18 @@
 package com.virtualworld.mipymeanabel.ui.screen.cart
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,12 +32,19 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,9 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
+import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel) {
+fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit) {
+
 
     val quantity by cartViewModel.quantity.collectAsStateWithLifecycle()
 
@@ -51,28 +67,114 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
     val updateQuantity = { idp: Long, unit: Int -> cartViewModel.updateQuantity(idp, unit) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+    val colorSurface = MaterialTheme.colorScheme.surface
 
+    val scale = remember { mutableStateOf(0.1f) }
+    val animatedScale by animateFloatAsState(
+        targetValue = scale.value,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+
+    val offsetY = remember { mutableStateOf(0f) }
+    val animatedOffsetY by animateFloatAsState(
+        targetValue = offsetY.value,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+
+    LaunchedEffect(Unit) {
+        scale.value = 0.1f // Escala inicial
+        offsetY.value = 100f // Desplazamiento vertical inicial
+        delay(200) // Retraso para que la animación sea visible
+        scale.value = 1f // Escala final
+        offsetY.value = 0f // Desplazamiento vertical final
+    }
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        LazyColumn() {
             items(products, key = { it.idp }) { product ->
-                ItemProduct(product, updateQuantity, quantity)
+                ItemProduct(product, updateQuantity, quantity,onProductClicked)
             }
 
             item {
-                Totals(totals)
+                Spacer(Modifier.height(180.dp))
             }
         }
 
-        Button(
-            onClick = { cartViewModel.onClickAddOrder() },
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp).fillMaxWidth()
 
-        ) {
+        Column(
+            Modifier
+                //.blur(radius = 1.dp)
+                //.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .align(Alignment.BottomCenter),
 
-            Text("Realizar pedido")
+            ) {
+
+
+            Box(
+                modifier = Modifier
+                    .height(32.dp)
+                    .fillMaxWidth()
+                    .drawBehind {
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(colorSurface.copy(alpha = 0.1f), colorSurface),
+                                startY = 0f,
+                                endY = size.height
+                            )
+                        )
+                    }
+            )
+
+            Box(Modifier.background(color = MaterialTheme.colorScheme.surface)) {
+
+                Column(
+                    Modifier.fillMaxWidth().padding(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Totals(totals)
+
+                    Button(
+                        onClick = {
+                            cartViewModel.onClickAddOrder()
+                        },
+                        shape = RoundedCornerShape(32.dp),
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .graphicsLayer {
+                                scaleX = animatedScale
+                                scaleY = animatedScale
+                                translationY = animatedOffsetY
+                            }
+                    ) {
+                        Text("Realizar pedido")
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun Modifier.granulado(
+    granularity: Int = 10000,
+    color: Color = Color.Gray.copy(alpha = 1f)
+): Modifier = remember(granularity, color) {
+    drawBehind {
+        val random = Random.Default
+        for (i in 0 until granularity) {
+            val x = random.nextFloat() * size.width
+            val y = random.nextFloat() * size.height
+            drawCircle(color, radius = 1f, center = Offset(x, y))
         }
     }
 }
@@ -81,9 +183,9 @@ fun CartScreen(cartViewModel: CartViewModel) {
 private fun Totals(totals: Map<String, Float>) {
 
 
-    val fontIndices = MaterialTheme.typography.titleLarge.copy()
+    val fontIndices = MaterialTheme.typography.titleMedium.copy()
 
-    Column(modifier = Modifier.padding(18.dp)) {
+    Column(Modifier.padding(horizontal = 12.dp)) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -94,8 +196,8 @@ private fun Totals(totals: Map<String, Float>) {
                 style = fontIndices
             )
             Text(
-                text = totals.get("totalUSD").toString() + "USD",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                text = totals.get("totalUSD").toString() + " USD",
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -109,8 +211,8 @@ private fun Totals(totals: Map<String, Float>) {
                 style = fontIndices
             )
             Text(
-                text = totals.get("totalMN").toString() + "MN",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                text = totals.get("totalMN").toString() + " MN",
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -125,10 +227,12 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("units")?.toInt().toString(),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge ,
                 color = MaterialTheme.colorScheme.primary
             )
         }
+
+        Spacer(Modifier.height(8.dp))
 
     }
 }
@@ -138,15 +242,17 @@ private fun Totals(totals: Map<String, Float>) {
 private fun ItemProduct(
     product: ProductCart,
     updateQuantity: (Long, Int) -> Unit,
-    quantity: Map<Long, Int>
-) {
+    quantity: Map<Long, Int>,
+    onProductClicked: (String) -> Unit,
+
+    ) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
             .padding(vertical = 4.dp).height(120.dp),
-        border = BorderStroke(color = MaterialTheme.colorScheme.primary.copy(0.6f), width = 1.dp),
+        border = BorderStroke(color = MaterialTheme.colorScheme.primary.copy(0.2f), width = 1.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.1f
+                alpha = 0.05f
             )
         )
     ) {
@@ -156,7 +262,7 @@ private fun ItemProduct(
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight().aspectRatio(2 / 2f)
-                    .padding(4.dp).clip(MaterialTheme.shapes.small)
+                    .padding(4.dp).clip(MaterialTheme.shapes.small).clickable { onProductClicked( product.idp.toString() ) }
             )
 
             Column(
@@ -198,9 +304,10 @@ private fun Quantity(
             onClick = { updateQuantity(product.idp, -1) },
             modifier = Modifier.border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
             ).size(42.dp),
-            shape = RectangleShape,
+            shape = RectangleShape ,
             contentPadding = PaddingValues(2.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
@@ -230,7 +337,8 @@ private fun Quantity(
             onClick = { updateQuantity(product.idp, 1) },
             modifier = Modifier.border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)
             ).size(42.dp),
             shape = RectangleShape,
             contentPadding = PaddingValues(2.dp),

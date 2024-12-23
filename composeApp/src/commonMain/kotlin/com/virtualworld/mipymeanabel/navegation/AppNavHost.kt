@@ -28,20 +28,20 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
     ) {
 
         val onProductClicked: (String) -> Unit = { productId ->
-            navController.navigate(RouteDetail.route + "/$productId")
+            navController.navigateToDetailDestination(RouteDetail.route + "/$productId")
         }
 
         composable(RouteHome.route) {
             HomeScreen(onProductClicked = onProductClicked)
         }
         composable(RouteCart.route) {
-            CartScreen(cartViewModel = koinViewModel()  )
+            CartScreen(cartViewModel = koinViewModel(), onProductClicked = onProductClicked)
         }
         //+"/{productId}"
         composable(
-            RouteDetail.route+"/{productId}",
+            RouteDetail.route + "/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
-        ) { navBackStackEntry->
+        ) { navBackStackEntry ->
             val productId = navBackStackEntry.arguments?.getString("productId")
             DetailScreen(detailViewModel = koinViewModel(parameters = { parametersOf(productId) }))
         }
