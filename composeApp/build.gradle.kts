@@ -9,15 +9,13 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-   // kotlin("plugin.serialization") version "1.8.22"
     alias(libs.plugins.ksp)
 
-
-
     alias(libs.plugins.gradleBuildConfig)
-    //FIREBASE
-    id("com.google.gms.google-services")
 
+    //Firebase
+    alias(libs.plugins.googleServices)
+    //Room
     id("androidx.room")
 }
 
@@ -95,14 +93,12 @@ kotlin {
             //NETWORK
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
-
-            //implementation(libs.ktor.serialization.json)
-            //implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.json)
 
 
             //FIREBASE
             implementation(libs.gitlive.firebase.firestore)
+            implementation(libs.gitlive.firebase.auth)
 
             implementation("androidx.room:room-runtime:2.7.0-alpha11")
             implementation("androidx.sqlite:sqlite-bundled:2.5.0-alpha01")
