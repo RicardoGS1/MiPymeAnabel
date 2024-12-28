@@ -1,27 +1,16 @@
 package com.virtualworld.mipymeanabel.ui.screen.profile
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.virtualworld.mipymeanabel.data.AuthenticationState
-import com.virtualworld.mipymeanabel.domain.models.AuthModel
-import com.virtualworld.mipymeanabel.domain.useCase.auth.LoadUserUseCase
-import com.virtualworld.mipymeanabel.domain.useCase.auth.SignInUseCase
-import com.virtualworld.mipymeanabel.domain.useCase.auth.SignOutUseCase
-import com.virtualworld.mipymeanabel.domain.useCase.auth.SignUpUseCase
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.FirebaseUser
+import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val signInUseCase: SignInUseCase,
-    private val signOutUseCase: SignOutUseCase,
-    private val signUpUseCase: SignUpUseCase,
-    private val loadUserUseCase: LoadUserUseCase
+    private val authUseCase: AuthUseCase,
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<AuthenticationState>(AuthenticationState.Loading)
@@ -39,7 +28,7 @@ class ProfileViewModel(
         viewModelScope.launch {
 
 
-            loadUserUseCase.invoke().collect { authState ->
+            authUseCase.loadUser().collect { authState ->
 
                 _userState.update { authState }
 
@@ -55,7 +44,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
 
-            signUpUseCase(email, password)
+            authUseCase.singUp(email, password)
 
         }
 
@@ -65,14 +54,14 @@ class ProfileViewModel(
     fun signOut() {
         viewModelScope.launch {
             _userState.update { AuthenticationState.Loading }
-            signOutUseCase()
+            authUseCase.singOut()
         }
     }
 
     fun singIn(userMail: String, userPassword: String) {
 
         viewModelScope.launch {
-            signInUseCase(userMail, userPassword)
+            authUseCase.signIn(userMail, userPassword)
         }
 
     }
