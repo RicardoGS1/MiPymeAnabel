@@ -6,12 +6,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.virtualworld.mipymeanabel.data.AuthenticationState
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
@@ -19,7 +21,93 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen( viewModel: ProfileViewModel  ) {
+
+    val authState by viewModel.userState.collectAsState()
+
+    var userMail: String by remember { mutableStateOf("") }
+    var userPassword: String by remember { mutableStateOf("") }
+
+    when(authState){
+        is AuthenticationState.Authenticated -> {
+
+            Column(){
+            Text("Bienvenido " + (authState as AuthenticationState.Authenticated).user    )
+
+                Button(
+                    onClick = {
+                        viewModel.signOut()
+                        }
+
+                ) {
+                    Text(text = "SignOut")
+                }
+            }
+
+        }
+        is AuthenticationState.AuthenticationError -> {
+
+            Text("Error"  + (authState as AuthenticationState.AuthenticationError).error )
+
+        }
+        is AuthenticationState.Loading -> {
+
+            Text("Cargando" )
+
+        }
+        is AuthenticationState.Unauthenticated -> {
+
+            Column {
+                TextField(
+                    value = userMail,
+                    onValueChange = { userMail = it },
+                    label = { Text("Email") }
+
+                )
+                TextField(
+                    value = userPassword,
+                    onValueChange = { userPassword = it },
+                    label = { Text("Email") }
+
+                )
+
+                Button(
+                    onClick = {
+
+                        viewModel.signUp(userMail, userPassword)
+
+                        }
+
+
+                ) {
+                    Text(text = "SignUp")
+                }
+                Button(
+                    onClick = {
+
+                       viewModel.singIn(userMail, userPassword)
+
+                    }
+
+
+                ) {
+                    Text(text = "SignIn")
+                }
+
+
+            }
+
+
+
+
+        }
+    }
+
+
+}
+
+@Composable
+fun ProfileScreens() {
 
     val scope = rememberCoroutineScope()
     val auth = remember { Firebase.auth }

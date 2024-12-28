@@ -5,7 +5,9 @@ import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 import com.virtualworld.mipymeanabel.data.repository.ProductRepositoryImp
 import com.virtualworld.mipymeanabel.data.databese.AppDatabase
 import com.virtualworld.mipymeanabel.data.databese.TodoDao
+import com.virtualworld.mipymeanabel.data.repository.AuthRepository
 import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
+import com.virtualworld.mipymeanabel.data.source.remote.FirebaseAuthDataSourceImpl
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
 import com.virtualworld.mipymeanabel.domain.AddCartUseCase
@@ -13,6 +15,10 @@ import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.GetProductByIdUseCase
 import com.virtualworld.mipymeanabel.domain.GetProductCartUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.auth.LoadUserUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.auth.SignInUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.auth.SignOutUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.auth.SignUpUseCase
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.module.dsl.factoryOf
@@ -33,6 +39,10 @@ val dataModules = module {
     single<FirebaseDataSource> { FirebaseDataSourceImpl(get()) }
     single<ProductRepository> { ProductRepositoryImp(get(),get()) }
 
+    singleOf(::AuthRepository)
+    singleOf( ::FirebaseAuthDataSourceImpl )
+
+
     singleOf (::RoomDataSource)
 
 
@@ -41,6 +51,12 @@ val dataModules = module {
     factoryOf (::GetProductByIdUseCase)
     factoryOf (::AddCartUseCase)
     factoryOf(::GetProductCartUseCase)
+
+    factoryOf(::SignInUseCase)
+    factoryOf(::SignOutUseCase)
+    factoryOf(::SignUpUseCase)
+    factoryOf(::LoadUserUseCase)
+
 
 }
 

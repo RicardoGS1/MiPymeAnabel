@@ -46,7 +46,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             DetailScreen(detailViewModel = koinViewModel(parameters = { parametersOf(productId) }))
         }
         composable(RouteProfile.route) {
-            ProfileScreen()
+            ProfileScreen(viewModel = koinViewModel())
         }
 
     }
