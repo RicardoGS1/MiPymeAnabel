@@ -96,7 +96,7 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
     }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().padding(top=40.dp)) {
 
         LazyColumn() {
             items(products, key = { it.idp }) { product ->

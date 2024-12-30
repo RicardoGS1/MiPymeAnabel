@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.virtualworld.mipymeanabel.data.AuthenticationState
+import com.virtualworld.mipymeanabel.ui.screen.profile.component.SelectSign
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
@@ -25,8 +26,10 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
 
     val authState by viewModel.userState.collectAsState()
 
-    var userMail: String by remember { mutableStateOf("") }
-    var userPassword: String by remember { mutableStateOf("") }
+    val signUp = { mail:String, password:String ->   viewModel.signUp(mail, password)}
+    val signIn = { mail:String, password:String ->   viewModel.signUp(mail, password)}
+
+
 
     when(authState){
         is AuthenticationState.Authenticated -> {
@@ -57,45 +60,8 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
         }
         is AuthenticationState.Unauthenticated -> {
 
-            Column {
-                TextField(
-                    value = userMail,
-                    onValueChange = { userMail = it },
-                    label = { Text("Email") }
+            SelectSign(signIn)
 
-                )
-                TextField(
-                    value = userPassword,
-                    onValueChange = { userPassword = it },
-                    label = { Text("Email") }
-
-                )
-
-                Button(
-                    onClick = {
-
-                        viewModel.signUp(userMail, userPassword)
-
-                        }
-
-
-                ) {
-                    Text(text = "SignUp")
-                }
-                Button(
-                    onClick = {
-
-                       viewModel.singIn(userMail, userPassword)
-
-                    }
-
-
-                ) {
-                    Text(text = "SignIn")
-                }
-
-
-            }
 
 
 
@@ -105,6 +71,9 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
 
 
 }
+
+
+
 
 @Composable
 fun ProfileScreens() {

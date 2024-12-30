@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.virtualworld.mipymeanabel.ui.screen.home.component.GridProducts
 import com.virtualworld.mipymeanabel.ui.screen.home.component.ImagePagerView
 import com.virtualworld.mipymeanabel.ui.screen.home.component.SearchBar
@@ -39,7 +41,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked
 
 
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize().padding(top = 40.dp)) {
 
         Column() {
 
