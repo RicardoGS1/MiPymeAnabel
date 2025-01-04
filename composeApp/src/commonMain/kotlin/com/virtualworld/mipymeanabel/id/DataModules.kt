@@ -4,6 +4,8 @@ import androidx.room.RoomDatabase
 import com.virtualworld.mipymeanabel.data.databese.AppDatabase
 import com.virtualworld.mipymeanabel.data.databese.TodoDao
 import com.virtualworld.mipymeanabel.data.repository.AuthRepository
+import com.virtualworld.mipymeanabel.data.repository.OrderRepository
+import com.virtualworld.mipymeanabel.data.repository.OrderRepositoryImpl
 import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 import com.virtualworld.mipymeanabel.data.repository.ProductRepositoryImp
 import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
@@ -14,6 +16,7 @@ import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
 import com.virtualworld.mipymeanabel.domain.useCase.AddCartUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductByIdUseCase
@@ -41,6 +44,7 @@ val dataModules = module {
     single<FirebaseDataSource> { FirebaseDataSourceImpl(get()) }
     single<FirebaseAuthDataSource> { FirebaseAuthDataSourceImpl(get()) }
     single<ProductRepository> { ProductRepositoryImp(get(),get()) }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<RoomDataSource> { RoomDataSourceImpl(get()) }
 
 
@@ -54,6 +58,7 @@ val dataModules = module {
     factoryOf (::AddCartUseCase)
     factoryOf(::GetProductCartUseCase)
     factoryOf(::AuthUseCase)
+    factoryOf (::AddOrderUseCase)
 
 
 

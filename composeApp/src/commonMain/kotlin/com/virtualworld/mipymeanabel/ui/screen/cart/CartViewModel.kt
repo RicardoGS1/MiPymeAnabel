@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
+import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
-class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : ViewModel() {
+class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, private val addOrderUseCase: AddOrderUseCase) : ViewModel() {
 
     private val _products = MutableStateFlow<List<ProductCart>>(emptyList())
     val productsState: StateFlow<List<ProductCart>> get() = _products

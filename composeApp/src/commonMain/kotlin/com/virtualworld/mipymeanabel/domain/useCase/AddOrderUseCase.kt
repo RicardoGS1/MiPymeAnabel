@@ -1,5 +1,7 @@
 package com.virtualworld.mipymeanabel.domain.useCase
 
-class AddOrderUseCase () {
+import com.virtualworld.mipymeanabel.data.repository.OrderRepository
+
+class AddOrderUseCase (private val orderRepository: OrderRepository) {
 
 }
