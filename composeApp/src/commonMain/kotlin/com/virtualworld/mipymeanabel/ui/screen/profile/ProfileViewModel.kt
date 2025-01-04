@@ -2,7 +2,8 @@ package com.virtualworld.mipymeanabel.ui.screen.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.mipymeanabel.data.AuthenticationState
+import com.virtualworld.mipymeanabel.data.model.AuthenticationState
+import com.virtualworld.mipymeanabel.data.model.SignResponseState
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,9 @@ class ProfileViewModel(
 
     private val _userState = MutableStateFlow<AuthenticationState>(AuthenticationState.Loading)
     val userState: StateFlow<AuthenticationState> get() = _userState
+
+    private val _signInState = MutableStateFlow<SignResponseState>(SignResponseState.Idle)
+    val signInState: StateFlow<SignResponseState> get() = _signInState
 
 
     init {
@@ -40,11 +44,11 @@ class ProfileViewModel(
     }
 
 
-    fun signUp(email: String, password: String) {
+    fun signUp(name: String, email: String, password: String) {
 
         viewModelScope.launch {
 
-            authUseCase.singUp(email, password)
+            authUseCase.singUp(email, password, name)
 
         }
 
@@ -61,7 +65,8 @@ class ProfileViewModel(
     fun singIn(userMail: String, userPassword: String) {
 
         viewModelScope.launch {
-            authUseCase.signIn(userMail, userPassword)
+            _signInState.update { SignResponseState.Loading }
+            _signInState.update { authUseCase.signIn(userMail, userPassword) }
         }
 
     }

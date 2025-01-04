@@ -1,20 +1,28 @@
 package com.virtualworld.mipymeanabel.data.repository
 
-import com.virtualworld.mipymeanabel.data.AuthenticationState
-import com.virtualworld.mipymeanabel.data.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.source.remote.FirebaseAuthDataSourceImpl
+import com.virtualworld.mipymeanabel.data.model.AuthenticationState
+import com.virtualworld.mipymeanabel.data.model.SignResponseState
+import com.virtualworld.mipymeanabel.data.source.remote.FirebaseAuthDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSourceImpl) {
+class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource) {
 
-    suspend fun signUp(email: String, password: String) {
-        firebaseAuthDataSource.signUp(email, password)
+    suspend fun signUp(email: String, password: String, name: String) {
+        firebaseAuthDataSource.signUp(email, password, name)
     }
 
-    suspend fun signIn(email: String, password: String) {
-        firebaseAuthDataSource.signIn(email, password)
+    suspend fun signIn(email: String, password: String): SignResponseState {
+
+
+        return try {
+            firebaseAuthDataSource.signIn(email, password)
+            SignResponseState.Success(email)
+        } catch (e: Exception) {
+            SignResponseState.Error(e)
+        }
+
+
     }
 
     suspend fun signOut() {
@@ -28,7 +36,6 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSourceI
         return firebaseAuthDataSource.loadUser().map { fireUser ->
 
 
-
             try {
                 if (fireUser == null) {
                     AuthenticationState.Unauthenticated
@@ -38,6 +45,7 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSourceI
                     AuthenticationState.Authenticated(fireUser.email.toString())
                 }
             } catch (e: Throwable) {
+                println("errrror en repoaut")
                 AuthenticationState.AuthenticationError(e.message.toString())
             }
 

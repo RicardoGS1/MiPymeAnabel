@@ -1,6 +1,4 @@
-package com.virtualworld.mipymeanabel.data
-
-import dev.gitlive.firebase.auth.FirebaseUser
+package com.virtualworld.mipymeanabel.data.model
 
 sealed class AuthenticationState {
     object Unauthenticated : AuthenticationState()
