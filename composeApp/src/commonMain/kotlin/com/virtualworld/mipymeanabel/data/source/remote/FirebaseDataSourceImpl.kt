@@ -1,5 +1,6 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
+import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
 import dev.gitlive.firebase.firestore.FirebaseFirestore
@@ -42,5 +43,9 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
         } catch (e: Exception) {
             NetworkResponseState.Error(e)
         }
+    }
+
+    override fun addOrder(order: Order): NetworkResponseState<Boolean> {
+        TODO("Not yet implemented")
     }
 }
