@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 class AuthUseCase (private val authRepository: AuthRepository) {
 
-    suspend fun singUp(email: String, password: String, name: String){
-        authRepository.signUp (email, password, name)
+    suspend fun singUp(email: String, password: String, name: String) : SignResponseState{
+        return authRepository.signUp (email, password, name)
 
     }
 

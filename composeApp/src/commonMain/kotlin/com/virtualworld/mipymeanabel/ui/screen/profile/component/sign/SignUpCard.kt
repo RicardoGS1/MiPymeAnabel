@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.virtualworld.mipymeanabel.data.model.SignResponseState
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.TextFieldMail
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.TextFieldPassword
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.isValidEmail
@@ -38,10 +41,12 @@ import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.isValidE
 fun SignUpCard(
     modifier: Modifier,
     visibleSignInCard: Boolean,
-    signUp: (String, String, String) -> Unit
+    signUp: (String, String, String) -> Unit,
+    signUpState: SignResponseState,
 ) {
 
     var name: String by remember { mutableStateOf("") }
+    var isNameValid by remember { mutableStateOf(true) }
 
     var mail: String by remember { mutableStateOf("") }
     val changerMail = { updateMail: String -> mail = updateMail }
@@ -81,7 +86,10 @@ fun SignUpCard(
 
                 TextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        isNameValid = true
+                    },
                     label = { Text("Nombre", color = MaterialTheme.colorScheme.primary) },
                     modifier = Modifier.fillMaxWidth()
                         .padding(vertical = 16.dp, horizontal = 36.dp),
@@ -89,8 +97,15 @@ fun SignUpCard(
                         disabledContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent
+                    ),
+                    isError = !isNameValid, // Muestra un error si el correo electrónico no es válido
+                    supportingText = {
+                        if (!isNameValid) {
+                            Text("Nombre inválido", color = Color.Red)
+                        }
+                    }
 
-                        )
 
                 )
 
@@ -117,22 +132,24 @@ fun SignUpCard(
                 Button(
                     onClick = {
 
-                        if (mail.isNotBlank() && isValidEmail(mail)){
+                        if (mail.isNotBlank() && isValidEmail(mail)) {
 
 
-                            if (password.isNotBlank() && password == confirmPassword) {
-                                signUp(name, mail, password)
+                            if (password.isNotBlank() && password == confirmPassword && password.length > 5) {
 
-                            }else {
+                                if (name.isNotBlank()) {
+                                    signUp(name, mail, password)
+                                } else {
+                                    isNameValid = false
+                                }
+
+                            } else {
                                 isPasswordValid = false
-                               // isConfirmPasswordValid = false
+                                // isConfirmPasswordValid = false
                             }
-                        }
-
-                        else {
+                        } else {
                             isEmailValid = false
                         }
-
 
 
                     },
@@ -142,6 +159,19 @@ fun SignUpCard(
 
                 ) {
                     Text(text = "Crear Cuenta", fontSize = 22.sp)
+                }
+
+                if (signUpState is SignResponseState.Error) {
+                    Text(
+                        text = "Ocurrio un error:   " + signUpState.exception.message.toString(),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(horizontal = 32.dp).padding(top = 16.dp)
+                    )
+                }
+
+                if (signUpState is SignResponseState.Loading) {
+                    CircularProgressIndicator(modifier = Modifier.size(42.dp).padding(top = 12.dp))
                 }
 
 

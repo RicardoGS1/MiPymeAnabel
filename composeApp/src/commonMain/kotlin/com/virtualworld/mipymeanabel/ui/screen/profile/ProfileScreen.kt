@@ -15,6 +15,7 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
     val authState by viewModel.userState.collectAsState()
 
     val signInState by viewModel.signInState.collectAsState()
+    val signUpState by viewModel.signUpState.collectAsState()
 
     val signUp = {name:String, mail:String, password:String ->   viewModel.signUp(name, mail, password)}
     val signIn = { mail:String, password:String ->   viewModel.singIn(mail, password) }
@@ -50,7 +51,7 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
         }
         is AuthenticationState.Unauthenticated -> {
 
-            SelectSign(signIn,signUp,signInState)
+            SelectSign(signIn,signUp,signInState,signUpState)
 
 
 

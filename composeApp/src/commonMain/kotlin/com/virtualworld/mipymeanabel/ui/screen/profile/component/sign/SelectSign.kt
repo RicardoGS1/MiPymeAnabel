@@ -37,7 +37,8 @@ import com.virtualworld.mipymeanabel.ui.screen.profile.component.TitleSign
 fun SelectSign(
     signIn: (String, String) -> Unit,
     signUp: (String, String, String) -> Unit,
-    signInState: SignResponseState
+    signInState: SignResponseState,
+    signUpState: SignResponseState
 ) {
 
 
@@ -146,7 +147,7 @@ fun SelectSign(
 
 
         SignInCard(Modifier.align(Alignment.BottomCenter), visibleSignInCard, signIn, signInState, changerVisibleSignInCard)
-        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp)
+        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp, signUpState)
 
     }
 

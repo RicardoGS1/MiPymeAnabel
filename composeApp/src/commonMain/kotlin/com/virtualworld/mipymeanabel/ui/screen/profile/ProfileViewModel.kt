@@ -20,6 +20,9 @@ class ProfileViewModel(
     private val _signInState = MutableStateFlow<SignResponseState>(SignResponseState.Idle)
     val signInState: StateFlow<SignResponseState> get() = _signInState
 
+    private val _signUpState = MutableStateFlow<SignResponseState>(SignResponseState.Idle)
+    val signUpState: StateFlow<SignResponseState> get() = _signUpState
+
 
     init {
 
@@ -48,7 +51,8 @@ class ProfileViewModel(
 
         viewModelScope.launch {
 
-            authUseCase.singUp(email, password, name)
+            _signUpState.update { SignResponseState.Loading }
+            _signUpState.update { authUseCase.singUp(email, password, name) }
 
         }
 

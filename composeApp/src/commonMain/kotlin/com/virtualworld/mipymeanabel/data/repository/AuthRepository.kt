@@ -8,8 +8,14 @@ import kotlinx.coroutines.flow.map
 
 class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource) {
 
-    suspend fun signUp(email: String, password: String, name: String) {
-        firebaseAuthDataSource.signUp(email, password, name)
+    suspend fun signUp(email: String, password: String, name: String) : SignResponseState {
+
+       return try {
+           firebaseAuthDataSource.signUp(email, password, name)
+           SignResponseState.Success(name)
+       } catch (e: Exception){
+           SignResponseState.Error(e)
+       }
     }
 
     suspend fun signIn(email: String, password: String): SignResponseState {
