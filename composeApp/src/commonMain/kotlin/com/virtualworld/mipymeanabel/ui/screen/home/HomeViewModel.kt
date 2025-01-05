@@ -2,10 +2,10 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.mipymeanabel.data.NetworkResponseState
+import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
-import com.virtualworld.mipymeanabel.domain.AddFavoriteUseCase
-import com.virtualworld.mipymeanabel.domain.GetAllProductUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

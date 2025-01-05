@@ -30,6 +30,7 @@ import com.virtualworld.mipymeanabel.navegation.RouteProfile
 @Composable
 fun TopBarView(scrollBehavior: TopAppBarScrollBehavior, navController: NavHostController) {
 
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -44,19 +45,21 @@ fun TopBarView(scrollBehavior: TopAppBarScrollBehavior, navController: NavHostCo
 
     val currentTitle = routeTitles[currentRoute] ?: "Anabella´s Shop"
 
-    CenterAlignedTopAppBar(
-        title = { Text(text = currentTitle, ) },
-        scrollBehavior = scrollBehavior,
-        navigationIcon = {
-            if (currentRoute == RouteDetail.route+"/{productId}") {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
+    if (currentRoute == RouteDetail.route + "/{productId}") {
+        CenterAlignedTopAppBar(
+            title = { Text(text = currentTitle) },
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                if (currentRoute == RouteDetail.route + "/{productId}") {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
                 }
             }
-        }
-    )
+        )
+    }
 
 }

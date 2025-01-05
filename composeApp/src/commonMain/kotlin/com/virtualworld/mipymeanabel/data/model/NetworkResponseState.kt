@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.data
+package com.virtualworld.mipymeanabel.data.model
 
 sealed class NetworkResponseState<out T : Any> {
 

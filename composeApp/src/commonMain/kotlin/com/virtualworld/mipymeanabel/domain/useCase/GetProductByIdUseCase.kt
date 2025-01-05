@@ -1,6 +1,6 @@
-package com.virtualworld.mipymeanabel.domain
+package com.virtualworld.mipymeanabel.domain.useCase
 
-import com.virtualworld.mipymeanabel.data.NetworkResponseState
+import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
 import com.virtualworld.mipymeanabel.data.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow

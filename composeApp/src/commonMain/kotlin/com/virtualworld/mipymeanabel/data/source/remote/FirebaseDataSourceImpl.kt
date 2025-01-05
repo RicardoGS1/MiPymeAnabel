@@ -1,13 +1,12 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
-import com.virtualworld.mipymeanabel.data.NetworkResponseState
+import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.take
 
 
 class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : FirebaseDataSource {

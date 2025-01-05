@@ -1,22 +1,14 @@
 package com.virtualworld.mipymeanabel.data.source.local
 
-import com.virtualworld.mipymeanabel.data.databese.TodoDao
 import com.virtualworld.mipymeanabel.data.dto.ProductInfo
 import kotlinx.coroutines.flow.Flow
 
-class RoomDataSource(private val todoDao: TodoDao) {
+interface RoomDataSource {
 
-    fun getInfoProducts() : Flow<List<ProductInfo>> {
-      return  todoDao.getAllProductInfoFlow()
-    }
+    fun getInfoProducts(): Flow<List<ProductInfo>>
 
-    fun getInfoProductById(id :Long): Flow<ProductInfo?> {
-        return todoDao.getInfoProductById(id)
-    }
+    fun getInfoProductById(id: Long): Flow<ProductInfo?>
 
-    suspend fun updateInfoProduct(productInfo: ProductInfo){
-        todoDao.insert(productInfo)
-    }
-
+    suspend fun updateInfoProduct(productInfo: ProductInfo)
 
 }
