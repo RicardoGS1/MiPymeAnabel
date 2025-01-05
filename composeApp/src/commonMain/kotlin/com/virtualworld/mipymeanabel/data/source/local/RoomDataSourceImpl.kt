@@ -18,5 +18,9 @@ class RoomDataSourceImpl(private val todoDao: TodoDao) : RoomDataSource {
         todoDao.insert(productInfo)
     }
 
+    override suspend fun deleteAllCart() {
+        todoDao.updateAllColumnCart()
+    }
+
 
 }

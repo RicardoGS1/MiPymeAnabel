@@ -17,5 +17,7 @@ interface ProductRepository {
 
     fun getProductCart(): Flow<List<ProductCart>>
 
+    suspend fun deleteAllCart()
+
 
 }

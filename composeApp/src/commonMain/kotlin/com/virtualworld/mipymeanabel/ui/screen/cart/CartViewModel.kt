@@ -7,13 +7,18 @@ import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
-class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, private val addOrderUseCase: AddOrderUseCase) : ViewModel() {
+class CartViewModel(
+    private val getProductCartUseCase: GetProductCartUseCase,
+    private val addOrderUseCase: AddOrderUseCase,
+    private val deletCartUseCase: DeletCartUseCase,
+) : ViewModel() {
 
     private val _products = MutableStateFlow<List<ProductCart>>(emptyList())
     val productsState: StateFlow<List<ProductCart>> get() = _products
@@ -47,7 +52,7 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, pr
 
                 }
 
-                     getTotals()
+                getTotals()
 
             }
 
@@ -60,14 +65,14 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, pr
         var totalMN = 0f
         var units = 0f
 
-        _products.value.forEach { prod->
+        _products.value.forEach { prod ->
 
             val priceUSD = prod.priceUSD
             val priceMN = prod.priceMN
 
-            totalUSD += priceUSD*_quantity.value[prod.idp]!!
+            totalUSD += priceUSD * _quantity.value[prod.idp]!!
 
-            totalMN += priceMN*_quantity.value[prod.idp]!!
+            totalMN += priceMN * _quantity.value[prod.idp]!!
 
             units += _quantity.value[prod.idp]!!
 
@@ -150,7 +155,9 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, pr
 
         viewModelScope.launch {
 
-        addOrderUseCase(myOrder)
+            addOrderUseCase(myOrder)
+            deletCartUseCase.deleteCart()
+
         }
 
     }

@@ -128,6 +128,9 @@ class ProductRepositoryImp(
             }
         }
 
+    override suspend fun deleteAllCart() {
+        roomDataSource.deleteAllCart()
+    }
 
 
 }

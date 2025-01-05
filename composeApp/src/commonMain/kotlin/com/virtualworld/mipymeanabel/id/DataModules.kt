@@ -18,6 +18,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddCartUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductByIdUseCase
@@ -61,6 +62,7 @@ val dataModules = module {
     factoryOf(::AuthUseCase)
     factoryOf (::AddOrderUseCase)
     factoryOf(::GetOrdersUseCase)
+    factoryOf(::DeletCartUseCase)
 
 
 
