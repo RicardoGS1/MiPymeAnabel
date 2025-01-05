@@ -19,10 +19,7 @@ data class OrderProducts(
     val name: String = "",
     val priceMn: String = "",
     val priceUsd: String = "",
-    val detail:String = "",
-    val available:String = "",
     val image:String = "",
-    val category:String = "",
     val unit: String
 
 )

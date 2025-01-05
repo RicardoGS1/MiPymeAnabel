@@ -10,9 +10,11 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
+import kotlin.math.round
 
 class CartViewModel(
     private val getProductCartUseCase: GetProductCartUseCase,
@@ -108,56 +110,39 @@ class CartViewModel(
 
     fun onClickAddOrder() {
 
-        val myOrderProduct1 = OrderProducts(
-            idp = "2",
-            name = "koko",
-            priceMn = "89",
-            priceUsd = "90",
-            detail = "jk",
-            available = "ko",
-            image = "mkim",
-            category = "ko",
-            unit = "2",
-        )
-        val myOrderProduct2 = OrderProducts(
-            idp = "3",
-            name = "ko66666ko",
-            priceMn = "89",
-            priceUsd = "90",
-            detail = "jk",
-            available = "ko",
-            image = "mkim",
-            category = "ko",
-            unit = "2",
-        )
+        if (_products.value.isNotEmpty()) {
 
-        val myOrderProduct3 = OrderProducts(
-            idp = "4",
-            name = "mkmkkoko",
-            priceMn = "89",
-            priceUsd = "90",
-            detail = "jk",
-            available = "ko",
-            image = "mkim",
-            category = "ko",
-            unit = "2",
-        )
+            val name = "huhuniu"
+            val dateDelviry = "23/223/23"
+            val dateActual = "343/43/43"
 
-        val myListOrders: List<OrderProducts> =
-            listOf(myOrderProduct1, myOrderProduct2, myOrderProduct3)
+            val orderProducts = _products.value.map {
+                OrderProducts(
+                    idp = it.idp.toString(),
+                    name = it.name,
+                    priceMn = it.priceMN.toString(),
+                    priceUsd = it.priceUSD.toString(),
+                    image = it.image,
+                    unit = _quantity.value[it.idp].toString(),
+                )
+            }
 
-        val myOrder = Order(
-            name = "culetef",
-            dateOrder = "23/67/890",
-            dateDelivery = "56/78/89",
-            listOrderProducts = myListOrders
-        )
 
-        viewModelScope.launch {
+            val myOrder = Order(
+                name = name,
+                dateOrder = dateActual,
+                dateDelivery = dateDelviry,
+                listOrderProducts = orderProducts
+            )
 
-            addOrderUseCase(myOrder)
-            deletCartUseCase.deleteCart()
 
+            viewModelScope.launch {
+
+
+                addOrderUseCase(myOrder)
+                deletCartUseCase.deleteCart()
+
+            }
         }
 
     }
@@ -168,5 +153,5 @@ class CartViewModel(
 
 fun Float.roundToDecimals(decimals: Int): Float {
     val multiplier = 10.0f.pow(decimals)
-    return kotlin.math.round(this * multiplier) / multiplier
+    return round(this * multiplier) / multiplier
 }
