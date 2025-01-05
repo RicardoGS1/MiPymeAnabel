@@ -2,38 +2,113 @@ package com.virtualworld.mipymeanabel.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtualworld.mipymeanabel.data.model.Product
-import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSourceImpl
+import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
+import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val firebaseDataSourceImpl: FirebaseDataSourceImpl): ViewModel() {
+class HomeViewModel(
+    private val getAllProductUseCase: GetAllProductUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase
+) : ViewModel() {
 
-    private val _productsState = MutableStateFlow<List<Product>>(emptyList())
-    val productsState: StateFlow<List<Product>> get() = _productsState.asStateFlow()
+    private val _allProducts = MutableStateFlow<List<ProductAll>>(emptyList())
+    val productsState: StateFlow<List<ProductAll>> get() = filteredProductsState()
+
+    private val _categoryState = MutableStateFlow<List<String>>(emptyList())
+    val categoryState: StateFlow<List<String>> get() = _categoryState.asStateFlow()
+
+    private val _selectedCategoryState = MutableStateFlow<String>("Todos")
+    val selectedCategoryState: StateFlow<String> get() = _selectedCategoryState.asStateFlow()
+
+
+    private val _searchText = MutableStateFlow<String>("")
+    val searchText: StateFlow<String> get() = _searchText.asStateFlow()
+
 
     init {
-        getProducts()
+        getAllProducts()
+
     }
 
-    private fun getProducts() {
+    private fun getAllProducts() {
 
         viewModelScope.launch {
 
-            firebaseDataSourceImpl.getUsers().collect { listProducts ->
 
-                _productsState.update {
-                    listProducts
+            getAllProductUseCase().collect { listProducts ->
+
+                when (listProducts) {
+                    is NetworkResponseState.Error -> {}
+                    NetworkResponseState.Loading -> {}
+                    is NetworkResponseState.Success -> {
+
+                        _allProducts.update { listProducts.result }
+                        _categoryState.update {
+                            listOf("Todos", "Favorites") + _allProducts.value.map { it.category }
+                                .distinct()
+                        }
+
+                    }
+
                 }
-                println(listProducts)
-
             }
 
         }
+
+
     }
+
+    private fun filteredProductsState(): StateFlow<List<ProductAll>> =
+        combine(
+            _searchText,
+            _selectedCategoryState,
+            _allProducts
+        ) { text, category, listAllProducts ->
+
+            listAllProducts.filter { product ->
+                product.name.contains(text, ignoreCase = true) &&
+                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
+            }
+
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(), _allProducts.value
+        )
+
+
+    fun updateSearchText(searchText: String) {
+        _searchText.update { searchText }
+    }
+
+
+    fun updateSelectedCategory(selected: String) {
+        _selectedCategoryState.update {
+            selected
+        }
+    }
+
+    fun onClickFavorite(id: String) {
+
+        viewModelScope.launch {
+            addFavoriteUseCase.addFavorite(id.toLong())
+
+        }
+
+    }
+
+    fun onClickProduct(id: String) {
+
+    }
+
 
 }
 

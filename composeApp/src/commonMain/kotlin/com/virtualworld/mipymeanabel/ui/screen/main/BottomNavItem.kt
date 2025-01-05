@@ -29,12 +29,6 @@ sealed class BottomNavItem(
         route = RouteCart.route,
     )
 
-    data object Favorite : BottomNavItem(
-        title = "Favorito",
-        icon = Icons.Default.Favorite,
-        route = RouteFavorite.route,
-    )
-
     data object Profile : BottomNavItem(
         title = "Usuario",
         icon = Icons.Default.AccountCircle,
@@ -46,7 +40,6 @@ sealed class BottomNavItem(
             return listOf(
                 Home,
                 Cart,
-                Favorite,
                 Profile,
             )
         }

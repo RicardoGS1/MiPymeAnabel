@@ -5,39 +5,53 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.virtualworld.mipymeanabel.ui.screen.cart.CartScreen
-import com.virtualworld.mipymeanabel.ui.screen.favorite.FavoriteScreen
+import com.virtualworld.mipymeanabel.ui.screen.detail.DetailScreen
 import com.virtualworld.mipymeanabel.ui.screen.home.HomeScreen
 import com.virtualworld.mipymeanabel.ui.screen.profile.ProfileScreen
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.parameter.parametersOf
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues)
-{
+fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
 
-    NavHost(navController,startDestination = RouteHome.route, modifier = Modifier.padding(paddingValues)) {
+    NavHost(
+        navController,
+        startDestination = RouteHome.route,
+        modifier = Modifier.padding(paddingValues)
+    ) {
 
-
+        val onProductClicked: (String) -> Unit = { productId ->
+            navController.navigateToDetailDestination(RouteDetail.route + "/$productId")
+        }
 
         composable(RouteHome.route) {
-            HomeScreen()
+            HomeScreen(onProductClicked = onProductClicked)
         }
         composable(RouteCart.route) {
-            CartScreen()
+            CartScreen(cartViewModel = koinViewModel(), onProductClicked = onProductClicked)
         }
-        composable(RouteFavorite.route) {
-            FavoriteScreen()
+        //+"/{productId}"
+        composable(
+            RouteDetail.route + "/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+        ) { navBackStackEntry ->
+            val productId = navBackStackEntry.arguments?.getString("productId")
+            DetailScreen(detailViewModel = koinViewModel(parameters = { parametersOf(productId) }))
         }
         composable(RouteProfile.route) {
-            ProfileScreen()
+            ProfileScreen(viewModel = koinViewModel())
         }
 
     }
 
-
-    }
+}
 
 
 

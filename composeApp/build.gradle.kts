@@ -9,13 +9,20 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-   // kotlin("plugin.serialization") version "1.8.22"
     alias(libs.plugins.ksp)
 
     alias(libs.plugins.gradleBuildConfig)
-    //FIREBASE
-    id("com.google.gms.google-services")
+
+    //Firebase
+    alias(libs.plugins.googleServices)
+    //Room
+    id("androidx.room")
 }
+
+
+//room {
+//    schemaDirectory("$projectDir/schemas")
+//}
 
 kotlin {
     androidTarget {
@@ -33,6 +40,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
     
@@ -85,14 +93,19 @@ kotlin {
             //NETWORK
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
-
-            //implementation(libs.ktor.serialization.json)
-            //implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.json)
 
 
             //FIREBASE
             implementation(libs.gitlive.firebase.firestore)
+            implementation(libs.gitlive.firebase.auth)
+
+            implementation("androidx.room:room-runtime:2.7.0-alpha11")
+            implementation("androidx.sqlite:sqlite-bundled:2.5.0-alpha01")
+            //ksp("androidx.room:room-compiler:2.7.0-alpha11")
+
+
+            //implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 
         }
@@ -129,11 +142,19 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.foundation.android)
     debugImplementation(compose.uiTooling)
+    ksp("androidx.room:room-compiler:2.7.0-alpha11")
+    annotationProcessor("androidx.room:room-compiler:2.7.0-alpha11")
+    add("kspAndroid", "androidx.room:room-compiler:2.7.0-alpha11")
+    add("kspIosX64", "androidx.room:room-compiler:2.7.0-alpha11")
 }
 
