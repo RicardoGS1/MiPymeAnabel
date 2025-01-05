@@ -1,8 +1,11 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
 import com.virtualworld.mipymeanabel.data.dto.Order
+import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -31,21 +34,43 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
 
         return try {
             val product = firestore.collection("PRODUCTS")
-                .where { "idp" equalTo productId }
-                .snapshots
-                .firstOrNull()
-                ?.documents
-                ?.firstOrNull()
+                .where { "idp" equalTo productId }.snapshots.firstOrNull()?.documents?.firstOrNull()
                 ?.data<Product>()
 
-            product?.let { NetworkResponseState.Success(it) }
-                ?: NetworkResponseState.Error(Exception("No se encontro el producto"))
+            product?.let { NetworkResponseState.Success(it) } ?: NetworkResponseState.Error(
+                Exception("No se encontro el producto")
+            )
         } catch (e: Exception) {
             NetworkResponseState.Error(e)
         }
     }
 
-    override fun addOrder(order: Order): NetworkResponseState<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun addOrder(order: Order): NetworkResponseState<Boolean> {
+
+
+        firestore.collection("orders")
+            .document("0FlkOEsgT8RO3wOS5Ot1J73aXxx2").collection("collectionOrders")
+            .document.set(order)
+
+        return NetworkResponseState.Success(true)
+    }
+
+    override fun getOrders(): Flow<NetworkResponseState<List<Order>>> = flow {
+
+        try{
+            firestore.collection("orders")
+                .document("0FlkOEsgT8RO3wOS5Ot1J73aXxx2")
+                .collection("collectionOrders")
+                .snapshots.collect {
+
+                    val orders = it.documents.map { documentSnapshot ->
+                        documentSnapshot.data<Order>()
+                    }
+                    println("getProducts: $orders")
+                    emit(NetworkResponseState.Success(orders))
+                }
+        } catch (e:Exception){
+            NetworkResponseState.Error(e)
+        }
     }
 }

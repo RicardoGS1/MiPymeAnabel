@@ -1,5 +1,8 @@
 package com.virtualworld.mipymeanabel.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Order(
 
     val name : String,
@@ -9,6 +12,7 @@ data class Order(
 
 )
 
+@Serializable
 data class OrderProducts(
 
     val idp: String = "",

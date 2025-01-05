@@ -11,5 +11,7 @@ interface FirebaseDataSource {
 
     suspend fun getProductById(productId: String): NetworkResponseState<Product>
 
-    fun addOrder(order: Order) : NetworkResponseState<Boolean>
+    suspend fun addOrder(order: Order) : NetworkResponseState<Boolean>
+
+    fun getOrders() : Flow<NetworkResponseState<List<Order>>>
 }

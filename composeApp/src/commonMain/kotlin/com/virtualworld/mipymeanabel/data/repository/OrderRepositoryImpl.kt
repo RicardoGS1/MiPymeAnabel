@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 class OrderRepositoryImpl (private val firebaseDataSource: FirebaseDataSource) : OrderRepository {
 
-    override fun addOrder(order: Order): NetworkResponseState<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun addOrder(order: Order): NetworkResponseState<Boolean> {
+        return firebaseDataSource.addOrder(order)
     }
 
-    override fun getOrder(): Flow<NetworkResponseState<Order>> {
-        TODO("Not yet implemented")
+    override fun getOrder(): Flow<NetworkResponseState<List<Order>>> {
+       return firebaseDataSource.getOrders()
     }
 }

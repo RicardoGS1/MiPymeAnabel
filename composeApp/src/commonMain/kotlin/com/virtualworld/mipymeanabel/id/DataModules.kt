@@ -19,6 +19,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductByIdUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import dev.gitlive.firebase.Firebase
@@ -59,6 +60,7 @@ val dataModules = module {
     factoryOf(::GetProductCartUseCase)
     factoryOf(::AuthUseCase)
     factoryOf (::AddOrderUseCase)
+    factoryOf(::GetOrdersUseCase)
 
 
 

@@ -2,6 +2,8 @@ package com.virtualworld.mipymeanabel.ui.screen.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtualworld.mipymeanabel.data.dto.Order
+import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
@@ -101,7 +103,55 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase, pr
 
     fun onClickAddOrder() {
 
+        val myOrderProduct1 = OrderProducts(
+            idp = "2",
+            name = "koko",
+            priceMn = "89",
+            priceUsd = "90",
+            detail = "jk",
+            available = "ko",
+            image = "mkim",
+            category = "ko",
+            unit = "2",
+        )
+        val myOrderProduct2 = OrderProducts(
+            idp = "3",
+            name = "ko66666ko",
+            priceMn = "89",
+            priceUsd = "90",
+            detail = "jk",
+            available = "ko",
+            image = "mkim",
+            category = "ko",
+            unit = "2",
+        )
 
+        val myOrderProduct3 = OrderProducts(
+            idp = "4",
+            name = "mkmkkoko",
+            priceMn = "89",
+            priceUsd = "90",
+            detail = "jk",
+            available = "ko",
+            image = "mkim",
+            category = "ko",
+            unit = "2",
+        )
+
+        val myListOrders: List<OrderProducts> =
+            listOf(myOrderProduct1, myOrderProduct2, myOrderProduct3)
+
+        val myOrder = Order(
+            name = "culetef",
+            dateOrder = "23/67/890",
+            dateDelivery = "56/78/89",
+            listOrderProducts = myListOrders
+        )
+
+        viewModelScope.launch {
+
+        addOrderUseCase(myOrder)
+        }
 
     }
 
