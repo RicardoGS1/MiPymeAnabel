@@ -25,10 +25,13 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +70,7 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
 
     val updateQuantity = { idp: Long, unit: Int -> cartViewModel.updateQuantity(idp, unit) }
 
-    val colorSurface = MaterialTheme.colorScheme.surface
+    val colorSurface = MaterialTheme.colorScheme.primary
 
     val scale = remember { mutableStateOf(0.1f) }
     val animatedScale by animateFloatAsState(
@@ -96,15 +99,31 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
     }
 
 
-    Box(modifier = Modifier.fillMaxSize().padding(top=40.dp)) {
+    Box(modifier = Modifier.fillMaxSize().padding(top = 40.dp)) {
 
-        LazyColumn() {
-            items(products, key = { it.idp }) { product ->
-                ItemProduct(product, updateQuantity, quantity,onProductClicked)
+        if (products.isNotEmpty()) {
+            LazyColumn() {
+                items(products, key = { it.idp }) { product ->
+                    ItemProduct(product, updateQuantity, quantity, onProductClicked)
+                }
+
+                item {
+                    Spacer(Modifier.height(180.dp))
+                }
             }
+        } else {
+            Column(
+                Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ShoppingCart,
+                    contentDescription = "No hay productos en el carrito",
+                    modifier = Modifier.size(90.dp),
+                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
 
-            item {
-                Spacer(Modifier.height(180.dp))
+                )
+                Text(text = "No hay productos en el carrito")
             }
         }
 
@@ -117,23 +136,33 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
 
             ) {
 
+            val primaryColor = MaterialTheme.colorScheme.primary
+            val darkerPrimaryColor = Color.Transparent
 
             Box(
                 modifier = Modifier
                     .height(32.dp)
                     .fillMaxWidth()
-                    .drawBehind {
-                        drawRect(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(colorSurface.copy(alpha = 0.1f), colorSurface),
-                                startY = 0f,
-                                endY = size.height
-                            )
-                        )
-                    }
+                    .background(
+                        Brush.verticalGradient(listOf(darkerPrimaryColor, primaryColor)),
+                       // shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    )
+//                    .drawBehind {
+//                        drawRect(
+//                            brush = Brush.verticalGradient(
+//                                colors = listOf(colorSurface.copy(alpha = 0.0f), colorSurface),
+//                                startY = 0f,
+//                                endY = size.height
+//                            )
+//                        )
+//                    }
+                //.clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             )
 
-            Box(Modifier.background(color = MaterialTheme.colorScheme.surface)) {
+            Box(Modifier.background(
+                Brush.verticalGradient(listOf( primaryColor, Color.Black)),
+
+            )) {
 
                 Column(
                     Modifier.fillMaxWidth().padding(12.dp),
@@ -148,12 +177,18 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
                         },
                         shape = RoundedCornerShape(32.dp),
                         modifier = Modifier
-                            .padding(2.dp)
-                            .graphicsLayer {
-                                scaleX = animatedScale
-                                scaleY = animatedScale
-                                translationY = animatedOffsetY
-                            }
+                            .padding(bottom = 16.dp)
+
+                            .border(
+                                width = 1.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(32.dp)
+                            ).height(38.dp),
+
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent, // Fondo transparente
+                            contentColor = Color.White // Color del texto (opcional)
+                        )
                     ) {
                         Text("Realizar pedido")
                     }
@@ -183,7 +218,8 @@ fun Modifier.granulado(
 private fun Totals(totals: Map<String, Float>) {
 
 
-    val fontIndices = MaterialTheme.typography.titleMedium.copy()
+    val fontIndices = MaterialTheme.typography.titleMedium.copy(color = Color.White)
+    val fontValues = MaterialTheme.typography.titleLarge.copy(color = Color.White)
 
     Column(Modifier.padding(horizontal = 12.dp)) {
 
@@ -197,8 +233,8 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("totalUSD").toString() + " USD",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
+                style = fontValues,
+                //color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -212,8 +248,8 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("totalMN").toString() + " MN",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
+                style = fontValues,
+               // color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -227,8 +263,8 @@ private fun Totals(totals: Map<String, Float>) {
             )
             Text(
                 text = totals.get("units")?.toInt().toString(),
-                style = MaterialTheme.typography.titleLarge ,
-                color = MaterialTheme.colorScheme.primary
+                style = fontValues,
+                //color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -262,7 +298,8 @@ private fun ItemProduct(
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxHeight().aspectRatio(2 / 2f)
-                    .padding(4.dp).clip(MaterialTheme.shapes.small).clickable { onProductClicked( product.idp.toString() ) }
+                    .padding(4.dp).clip(MaterialTheme.shapes.small)
+                    .clickable { onProductClicked(product.idp.toString()) }
             )
 
             Column(
@@ -307,7 +344,7 @@ private fun Quantity(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
             ).size(42.dp),
-            shape = RectangleShape ,
+            shape = RectangleShape,
             contentPadding = PaddingValues(2.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent

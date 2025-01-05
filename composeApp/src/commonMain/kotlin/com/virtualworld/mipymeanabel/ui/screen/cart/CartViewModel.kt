@@ -2,15 +2,25 @@ package com.virtualworld.mipymeanabel.ui.screen.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtualworld.mipymeanabel.data.dto.Order
+import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
+import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
+import kotlin.math.round
 
-class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : ViewModel() {
+class CartViewModel(
+    private val getProductCartUseCase: GetProductCartUseCase,
+    private val addOrderUseCase: AddOrderUseCase,
+    private val deletCartUseCase: DeletCartUseCase,
+) : ViewModel() {
 
     private val _products = MutableStateFlow<List<ProductCart>>(emptyList())
     val productsState: StateFlow<List<ProductCart>> get() = _products
@@ -44,7 +54,7 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
                 }
 
-                     getTotals()
+                getTotals()
 
             }
 
@@ -57,14 +67,14 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
         var totalMN = 0f
         var units = 0f
 
-        _products.value.forEach { prod->
+        _products.value.forEach { prod ->
 
             val priceUSD = prod.priceUSD
             val priceMN = prod.priceMN
 
-            totalUSD += priceUSD*_quantity.value[prod.idp]!!
+            totalUSD += priceUSD * _quantity.value[prod.idp]!!
 
-            totalMN += priceMN*_quantity.value[prod.idp]!!
+            totalMN += priceMN * _quantity.value[prod.idp]!!
 
             units += _quantity.value[prod.idp]!!
 
@@ -100,6 +110,41 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
     fun onClickAddOrder() {
 
+        if (_products.value.isNotEmpty()) {
+
+            val name = "huhuniu"
+            val dateDelviry = "23/223/23"
+            val dateActual = "343/43/43"
+
+            val orderProducts = _products.value.map {
+                OrderProducts(
+                    idp = it.idp.toString(),
+                    name = it.name,
+                    priceMn = it.priceMN.toString(),
+                    priceUsd = it.priceUSD.toString(),
+                    image = it.image,
+                    unit = _quantity.value[it.idp].toString(),
+                )
+            }
+
+
+            val myOrder = Order(
+                name = name,
+                dateOrder = dateActual,
+                dateDelivery = dateDelviry,
+                listOrderProducts = orderProducts
+            )
+
+
+            viewModelScope.launch {
+
+
+                addOrderUseCase(myOrder)
+                deletCartUseCase.deleteCart()
+
+            }
+        }
+
     }
 
 
@@ -108,5 +153,5 @@ class CartViewModel(private val getProductCartUseCase: GetProductCartUseCase) : 
 
 fun Float.roundToDecimals(decimals: Int): Float {
     val multiplier = 10.0f.pow(decimals)
-    return kotlin.math.round(this * multiplier) / multiplier
+    return round(this * multiplier) / multiplier
 }

@@ -22,4 +22,7 @@ interface TodoDao {
     @Query("SELECT *  FROM ProductInfo WHERE id = :id ")
     fun getInfoProductById(id : Long) : Flow<ProductInfo?>
 
+    @Query("UPDATE ProductInfo SET cart = false")
+    suspend fun updateAllColumnCart()
+
 }

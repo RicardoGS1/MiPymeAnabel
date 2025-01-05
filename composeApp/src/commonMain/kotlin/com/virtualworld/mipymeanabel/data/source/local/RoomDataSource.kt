@@ -11,4 +11,6 @@ interface RoomDataSource {
 
     suspend fun updateInfoProduct(productInfo: ProductInfo)
 
+    suspend fun deleteAllCart()
+
 }
