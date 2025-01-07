@@ -47,7 +47,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
+import com.virtualworld.mipymeanabel.ui.screen.cart.component.OrderDatePicker
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
@@ -69,6 +69,9 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
     val products by cartViewModel.productsState.collectAsStateWithLifecycle()
 
     val updateQuantity = { idp: Long, unit: Int -> cartViewModel.updateQuantity(idp, unit) }
+
+    val selectDate =  remember {  mutableStateOf(false) }
+    val changerSelectDate = { visible:Boolean -> selectDate.value = visible }
 
     val colorSurface = MaterialTheme.colorScheme.primary
 
@@ -173,7 +176,8 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
 
                     Button(
                         onClick = {
-                            cartViewModel.onClickAddOrder()
+                            selectDate.value=true
+                           // cartViewModel.onClickAddOrder()
                         },
                         shape = RoundedCornerShape(32.dp),
                         modifier = Modifier
@@ -195,6 +199,12 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
                 }
             }
         }
+
+
+            OrderDatePicker(selectDate.value,changerSelectDate)
+
+
+
     }
 }
 
