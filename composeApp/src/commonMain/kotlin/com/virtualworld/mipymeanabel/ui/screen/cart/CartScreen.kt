@@ -1,8 +1,11 @@
 package com.virtualworld.mipymeanabel.ui.screen.cart
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
@@ -68,28 +72,33 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
 
     val products by cartViewModel.productsState.collectAsStateWithLifecycle()
 
+    val dateDelivery by cartViewModel.dateDelivery.collectAsStateWithLifecycle("")
+    val changerDateDelivery = { date: Long -> cartViewModel.changerDateDelivery(date) }
+
     val updateQuantity = { idp: Long, unit: Int -> cartViewModel.updateQuantity(idp, unit) }
 
-    val selectDate =  remember {  mutableStateOf(false) }
-    val changerSelectDate = { visible:Boolean -> selectDate.value = visible }
+    val selectDate = remember { mutableStateOf(false) }
+    val changerSelectDate = { visible: Boolean -> selectDate.value = visible }
+
+    val sendOrder = remember { mutableStateOf(false) }
+    val changerSendOrder = { visible: Boolean -> sendOrder.value = visible }
+
+
+    val onClickAddOrder = {  cartViewModel.onClickAddOrder() }
 
     val colorSurface = MaterialTheme.colorScheme.primary
 
     val scale = remember { mutableStateOf(0.1f) }
     val animatedScale by animateFloatAsState(
-        targetValue = scale.value,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+        targetValue = scale.value, animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow
         )
     )
 
     val offsetY = remember { mutableStateOf(0f) }
     val animatedOffsetY by animateFloatAsState(
-        targetValue = offsetY.value,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+        targetValue = offsetY.value, animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow
         )
     )
 
@@ -105,7 +114,7 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
     Box(modifier = Modifier.fillMaxSize().padding(top = 40.dp)) {
 
         if (products.isNotEmpty()) {
-            LazyColumn() {
+            LazyColumn(Modifier.fillMaxSize()) {
                 items(products, key = { it.idp }) { product ->
                     ItemProduct(product, updateQuantity, quantity, onProductClicked)
                 }
@@ -116,8 +125,7 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
             }
         } else {
             Column(
-                Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
+                Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
                     imageVector = Icons.Filled.ShoppingCart,
@@ -140,53 +148,42 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
             ) {
 
             val primaryColor = MaterialTheme.colorScheme.primary
-            val darkerPrimaryColor = Color.Transparent
+            val darkerPrimaryColor = Color.Black
+
 
             Box(
-                modifier = Modifier
-                    .height(32.dp)
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(listOf(darkerPrimaryColor, primaryColor)),
-                       // shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                    )
-//                    .drawBehind {
-//                        drawRect(
-//                            brush = Brush.verticalGradient(
-//                                colors = listOf(colorSurface.copy(alpha = 0.0f), colorSurface),
-//                                startY = 0f,
-//                                endY = size.height
-//                            )
-//                        )
-//                    }
-                //.clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            )
-
-            Box(Modifier.background(
-                Brush.verticalGradient(listOf( primaryColor, Color.Black)),
-
-            )) {
+                Modifier.background(
+                    Brush.verticalGradient(listOf(primaryColor, darkerPrimaryColor)),
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
+            ) {
 
                 Column(
                     Modifier.fillMaxWidth().padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
+
                     Totals(totals)
+
+//                    TextButton(onClick = { selectDate.value = true }) {
+//                        Text(
+//                            text = if (dateDelivery.isEmpty()) "Agregar Fecha Recojida" else "Fecha Recojida: $dateDelivery",
+//                            color = Color.White
+//                        )
+//                    }
 
                     Button(
                         onClick = {
-                            selectDate.value=true
-                           // cartViewModel.onClickAddOrder()
+                            // if (dateDelivery.isNotBlank()) cartViewModel.onClickAddOrder()
+                            // else
+                            selectDate.value = true
                         },
                         shape = RoundedCornerShape(32.dp),
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 16.dp)
 
                             .border(
-                                width = 1.dp,
-                                color = Color.White,
-                                shape = RoundedCornerShape(32.dp)
+                                width = 1.dp, color = Color.White, shape = RoundedCornerShape(32.dp)
                             ).height(38.dp),
 
                         colors = ButtonDefaults.buttonColors(
@@ -194,25 +191,101 @@ fun CartScreen(cartViewModel: CartViewModel, onProductClicked: (String) -> Unit)
                             contentColor = Color.White // Color del texto (opcional)
                         )
                     ) {
-                        Text("Realizar pedido")
+                        Text("Planificar pedido ->")
                     }
+
+
                 }
             }
         }
 
 
-            OrderDatePicker(selectDate.value,changerSelectDate)
+        OrderDatePicker(selectDate.value, changerSelectDate, changerDateDelivery, changerSendOrder)
 
+        SendOrder(sendOrder.value, changerSendOrder , totals ,onClickAddOrder)
 
 
     }
 }
 
+@Composable
+fun SendOrder(
+    visible: Boolean,
+    changerSendOrder: (Boolean) -> Unit,
+    totals: Map<String, Float>,
+    onClickAddOrder: () -> Unit
+) {
+
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val darkerPrimaryColor = Color.Black
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically { fullHeight -> fullHeight },
+        exit = slideOutVertically { fullHeight -> fullHeight }
+    ) {
+
+        Box(Modifier.fillMaxSize().padding(top = 64.dp).background(
+            Brush.verticalGradient(listOf(primaryColor, darkerPrimaryColor)),
+            shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+        ).clickable { changerSendOrder(false) }) {
+
+
+            Column(Modifier.fillMaxSize().padding(horizontal = 16.dp).padding(top = 60.dp)) {
+
+                Text(
+                    "2- Enviar pedido",
+                    fontSize = 32.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+
+
+
+
+
+                Totals(totals)
+
+
+                Button(
+                    onClick = {
+                        onClickAddOrder()
+                        changerSendOrder(false) },
+                    shape = RoundedCornerShape(32.dp),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+
+                        .border(
+                            width = 1.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(32.dp)
+                        ).height(38.dp).align(alignment = Alignment.CenterHorizontally),
+
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent, // Fondo transparente
+                        contentColor = Color.White // Color del texto (opcional)
+                    )
+                )
+                {
+                    Text("Enviar Orden")
+                }
+
+
+
+
+            }
+
+        }
+
+
+    }
+
+}
+
 
 @Composable
 fun Modifier.granulado(
-    granularity: Int = 10000,
-    color: Color = Color.Gray.copy(alpha = 1f)
+    granularity: Int = 10000, color: Color = Color.Gray.copy(alpha = 1f)
 ): Modifier = remember(granularity, color) {
     drawBehind {
         val random = Random.Default
@@ -234,12 +307,10 @@ private fun Totals(totals: Map<String, Float>) {
     Column(Modifier.padding(horizontal = 12.dp)) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Total en USD",
-                style = fontIndices
+                text = "Total en USD", style = fontIndices
             )
             Text(
                 text = totals.get("totalUSD").toString() + " USD",
@@ -249,27 +320,23 @@ private fun Totals(totals: Map<String, Float>) {
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Total en MN",
-                style = fontIndices
+                text = "Total en MN", style = fontIndices
             )
             Text(
                 text = totals.get("totalMN").toString() + " MN",
                 style = fontValues,
-               // color = MaterialTheme.colorScheme.primary
+                // color = MaterialTheme.colorScheme.primary
             )
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Unidades",
-                style = fontIndices
+                text = "Unidades", style = fontIndices
             )
             Text(
                 text = totals.get("units")?.toInt().toString(),
@@ -293,8 +360,8 @@ private fun ItemProduct(
 
     ) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
-            .padding(vertical = 4.dp).height(120.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp).padding(vertical = 4.dp)
+            .height(120.dp),
         border = BorderStroke(color = MaterialTheme.colorScheme.primary.copy(0.2f), width = 1.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(
@@ -303,14 +370,12 @@ private fun ItemProduct(
         )
     ) {
         Row() {
-            AsyncImage(
-                model = product.image,
+            AsyncImage(model = product.image,
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight().aspectRatio(2 / 2f)
-                    .padding(4.dp).clip(MaterialTheme.shapes.small)
-                    .clickable { onProductClicked(product.idp.toString()) }
-            )
+                modifier = Modifier.fillMaxHeight().aspectRatio(2 / 2f).padding(4.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable { onProductClicked(product.idp.toString()) })
 
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -339,9 +404,7 @@ private fun ItemProduct(
 
 @Composable
 private fun Quantity(
-    updateQuantity: (Long, Int) -> Unit,
-    quantity: Map<Long, Int>,
-    product: ProductCart
+    updateQuantity: (Long, Int) -> Unit, quantity: Map<Long, Int>, product: ProductCart
 ) {
 
     Row(
@@ -374,10 +437,8 @@ private fun Quantity(
             text = quantity[product.idp].toString(),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.height(42.dp).wrapContentWidth()
-                .widthIn(min = 42.dp)
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.primary)
-                .padding(4.dp)
+            modifier = Modifier.height(42.dp).wrapContentWidth().widthIn(min = 42.dp)
+                .border(width = 1.dp, color = MaterialTheme.colorScheme.primary).padding(4.dp)
         )
 
         Button(

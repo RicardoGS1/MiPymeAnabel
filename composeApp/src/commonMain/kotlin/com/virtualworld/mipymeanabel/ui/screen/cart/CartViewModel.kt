@@ -8,6 +8,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -15,6 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.text.padStart
+
+
+
 
 class CartViewModel(
     private val getProductCartUseCase: GetProductCartUseCase,
@@ -30,6 +35,11 @@ class CartViewModel(
 
     private val _totals = MutableStateFlow<Map<String, Float>>(emptyMap())
     val totals: StateFlow<Map<String, Float>> get() = _totals
+
+    private val _dateDelivery = MutableStateFlow<Long>(0L)
+    val dateDelivery: Flow<String> = _dateDelivery.map { millis ->
+        if (millis == 0L) "" else convertMillisToDate(millis)
+    }
 
     init {
         getProductsCart()
@@ -147,8 +157,44 @@ class CartViewModel(
 
     }
 
+    fun changerDateDelivery(date: Long){
+        _dateDelivery.value = date
+    }
+
 
 }
+
+fun convertMillisToDate(millis: Long): String {
+    val daysInMonth = intArrayOf(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    var days = millis / 86400000 // Milisegundos en un día
+    var year = 1970
+    while (true) {
+        val daysInYear = if (isLeapYear(year)) 366 else 365
+        if (days >= daysInYear) {
+            days -= daysInYear
+            year++
+        } else {
+            break
+        }
+    }
+    var month = 1
+    while (true) {
+        val daysInCurrentMonth = if (month == 2 && isLeapYear(year)) 29 else daysInMonth[month]
+        if (days >= daysInCurrentMonth) {
+            days -= daysInCurrentMonth
+            month++
+        } else {
+            break
+        }
+    }
+    val day = days + 1
+    return "${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/$year"
+}
+
+fun isLeapYear(year: Int): Boolean {
+    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+}
+
 
 
 fun Float.roundToDecimals(decimals: Int): Float {
