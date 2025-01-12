@@ -1,13 +1,11 @@
 package com.virtualworld.mipymeanabel.ui.screen.cart.component
 
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,51 +13,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderDatePicker(
+fun SendOrder(
     visible: Boolean,
-    changerSelectDate: (Boolean) -> Unit,
-    changerDateDelivery: (Long) -> Unit,
-    changerSendOrder: (Boolean) -> Unit
+    changerSendOrder: (Boolean) -> Unit,
+    totals: Map<String, Float>,
+    onClickAddOrder: () -> Unit,
+    dateDelivery: String,
+    changerSelectDateVisible: (Boolean) -> Unit
 ) {
-
-    val datePickerState = rememberDatePickerState()
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     val primaryColor = MaterialTheme.colorScheme.primary
     val darkerPrimaryColor = Color.Black
@@ -68,7 +48,7 @@ fun OrderDatePicker(
         enter = slideInVertically { fullHeight -> fullHeight },
         exit = slideOutVertically { fullHeight -> fullHeight }) {
 
-        Box(Modifier.fillMaxSize().clickable { changerSelectDate(false) }) {
+        Box(Modifier.fillMaxSize().clickable { changerSendOrder(false) }) {
 
             Box(
                 Modifier.fillMaxWidth()
@@ -79,6 +59,7 @@ fun OrderDatePicker(
                     .align(Alignment.BottomCenter)
             ) {
 
+
                 Column(
                     Modifier.padding(horizontal = 16.dp).padding(top = 8.dp),
                     //verticalArrangement = Arrangement.SpaceAround
@@ -86,7 +67,10 @@ fun OrderDatePicker(
 
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 
-                        IconButton(onClick = { changerSelectDate(false) }) {
+                        IconButton(onClick = {
+                            changerSendOrder(false)
+                            changerSelectDateVisible(true)
+                        }) {
                             Icon(
                                 Icons.Filled.ArrowBack,
                                 contentDescription = "Back",
@@ -96,7 +80,7 @@ fun OrderDatePicker(
 
                         Text(
 
-                            "Fecha de despacho",
+                            "Finalizar Orden",
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                             fontSize = 24.sp,
                             color = Color.White,
@@ -108,33 +92,30 @@ fun OrderDatePicker(
                     }
 
                     Text(
-                        "Selccione una fecha para recojer su pedido",
+                        "Revise su pedido y a continucion envielo para completar la orden",
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         fontSize = 18.sp,
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
 
-                    DatePicker(
-                        state = datePickerState,
-                        modifier = Modifier.padding(top = 16.dp)
-                            .clip(shape = RoundedCornerShape(16.dp)),
+
+                    Text(
+                        "Fecha de despacho: $dateDelivery",
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 16.dp).padding(bottom = 8.dp)
+                            .fillMaxWidth()
                     )
+
+                    Totals(totals)
+
 
                     Button(
                         onClick = {
-                            if (datePickerState.selectedDateMillis != null) {
-                                datePickerState.selectedDateMillis?.let { changerDateDelivery(it) }
-                                changerSendOrder(true)
-                                changerSelectDate(false)
-                            } else {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Por favor, seleccione una fecha.",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                }
-                            }
+                            onClickAddOrder()
+                            changerSendOrder(false)
                         },
                         shape = RoundedCornerShape(32.dp),
                         modifier = Modifier.padding(bottom = 16.dp).padding(vertical = 24.dp)
@@ -144,22 +125,20 @@ fun OrderDatePicker(
                             ).height(38.dp).align(alignment = Alignment.CenterHorizontally),
 
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent,
+                            containerColor = Color.Transparent, // Fondo transparente
                             contentColor = Color.White // Color del texto (opcional)
                         )
-                    ) {
-                        Text("Continuar >")
+                    )
+                    {
+                        Text("Enviar Orden")
                     }
+
 
                 }
 
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp)
-                )
-
             }
         }
+
     }
 
 }

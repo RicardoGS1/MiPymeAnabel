@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.dto.OrderProducts
+import com.virtualworld.mipymeanabel.data.model.AuthenticationState
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,16 +23,15 @@ import kotlin.math.round
 import kotlin.text.padStart
 
 
-
-
 class CartViewModel(
     private val getProductCartUseCase: GetProductCartUseCase,
     private val addOrderUseCase: AddOrderUseCase,
-    private val deletCartUseCase: DeletCartUseCase,
+    private val deleteCartUseCase: DeletCartUseCase,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     private val _products = MutableStateFlow<List<ProductCart>>(emptyList())
-    val productsState: StateFlow<List<ProductCart>> get() = _products
+    val productsState: StateFlow<List<ProductCart>> get() = _products.asStateFlow()
 
     private val _quantity = MutableStateFlow<Map<Long, Int>>(emptyMap())
     val quantity: StateFlow<Map<Long, Int>> get() = _quantity
@@ -41,11 +44,29 @@ class CartViewModel(
         if (millis == 0L) "" else convertMillisToDate(millis)
     }
 
+    private val _isAuthenticate = MutableStateFlow<Boolean>(false)
+    val isAuthenticate : StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
+
     init {
         getProductsCart()
+        checkAuth()
+    }
+
+
+    private fun checkAuth(){
+        viewModelScope.launch {
+            authUseCase.loadUser().collect { state->
+
+                if(state is AuthenticationState.Authenticated ){
+                    _isAuthenticate.value=true
+                }
+
+            }
+        }
     }
 
     private fun getProductsCart() {
+
 
         viewModelScope.launch {
 
@@ -56,7 +77,7 @@ class CartViewModel(
                 }
 
                 for (product in products) {
-                    if (_quantity.value[product.idp] == null) { //  _quantity.value.isEmpty())
+                    if (_quantity.value[product.idp] == null) {
                         _quantity.update {
                             products.associate { it.idp to 1 }
                         }
@@ -108,10 +129,8 @@ class CartViewModel(
         _quantity.update { currentQuantity ->
 
             val newQuantity = currentQuantity[idp]?.plus(unit) ?: 0
-            if (newQuantity >= 0)
-                currentQuantity.plus(idp to newQuantity)
-            else
-                currentQuantity
+            if (newQuantity >= 0) currentQuantity.plus(idp to newQuantity)
+            else currentQuantity
         }
 
         getTotals()
@@ -150,14 +169,14 @@ class CartViewModel(
 
 
                 addOrderUseCase(myOrder)
-                deletCartUseCase.deleteCart()
+                deleteCartUseCase.deleteCart()
 
             }
         }
 
     }
 
-    fun changerDateDelivery(date: Long){
+    fun changerDateDelivery(date: Long) {
         _dateDelivery.value = date
     }
 
@@ -194,7 +213,6 @@ fun convertMillisToDate(millis: Long): String {
 fun isLeapYear(year: Int): Boolean {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
 }
-
 
 
 fun Float.roundToDecimals(decimals: Int): Float {
