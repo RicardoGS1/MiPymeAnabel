@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,11 +29,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.virtualworld.mipymeanabel.ui.screen.common.AlertDialogCommon
+import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
 
 @Composable
 fun ResumeCart(
     visible: Boolean,
-    totals: Map<String, Float>,
+    totals: DataTotals,
     selectDateVisible: MutableState<Boolean>,
     modifier: Modifier,
     isAuthenticate: Boolean,
@@ -42,14 +42,14 @@ fun ResumeCart(
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
-    val changerShowDialog = { visible: Boolean -> showDialog=visible}
+    val changerShowDialog = { visible: Boolean -> showDialog = visible }
 
 
     val primaryColor = MaterialTheme.colorScheme.primary
     val darkerPrimaryColor = Color.Black
 
 
-    if (totals["totalUSD"]?.let { it > 0.0 } == true || totals["totalMN"]?.let { it > 0.0 } == true) {
+    if (totals.totalUSD > 0.0 || totals.totalMN > 0.0) {
         Box(modifier = modifier) {
 
             AnimatedVisibility(visible = visible,
@@ -109,17 +109,16 @@ fun ResumeCart(
 }
 
 
-
 @Composable
-fun Totals(totals: Map<String, Float>) {
+fun Totals(totals: DataTotals) {
 
     Column(Modifier.padding(horizontal = 12.dp)) {
 
-        TotalRow(label = "Total en USD", total = totals["totalUSD"].toString() + " USD"  )
+        TotalRow(label = "Total en USD", total = totals.totalUSD.toString() + " USD")
 
-        TotalRow(label = "Total en MN", total = totals["totalMN"].toString() + " MN"  )
+        TotalRow(label = "Total en MN", total = totals.totalMN.toString() + " MN")
 
-        TotalRow(label = "Unidades", total = totals["units"].toString()  )
+        TotalRow(label = "Unidades", total = totals.units.toString())
 
     }
 }

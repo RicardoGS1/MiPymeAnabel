@@ -30,12 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
 
 @Composable
 fun SendOrder(
     visible: Boolean,
     changerSendOrder: (Boolean) -> Unit,
-    totals: Map<String, Float>,
+    totals: DataTotals,
     onClickAddOrder: () -> Unit,
     dateDelivery: String,
     changerSelectDateVisible: (Boolean) -> Unit
