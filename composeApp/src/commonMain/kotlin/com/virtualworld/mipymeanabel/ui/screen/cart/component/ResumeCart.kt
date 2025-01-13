@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -31,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.virtualworld.mipymeanabel.ui.screen.common.AlertDialogCommon
 
 @Composable
 fun ResumeCart(
@@ -43,6 +42,7 @@ fun ResumeCart(
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
+    val changerShowDialog = { visible: Boolean -> showDialog=visible}
 
 
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -103,84 +103,39 @@ fun ResumeCart(
                     }
                 }
             }
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = { Text("Registro necesario") },
-                    text = { Text("Para continuar, debes registrarte o iniciar sesión.") },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                navProfiler()
-                            }
-                        ) {
-                            Text("Registrarse")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = { showDialog = false }
-                        ) {
-                            Text("Cancelar")
-                        }
-                    }
-                )
-            }
+            AlertDialogCommon(showDialog, navProfiler, changerShowDialog)
         }
     }
 }
 
+
+
 @Composable
 fun Totals(totals: Map<String, Float>) {
 
+    Column(Modifier.padding(horizontal = 12.dp)) {
+
+        TotalRow(label = "Total en USD", total = totals["totalUSD"].toString() + " USD"  )
+
+        TotalRow(label = "Total en MN", total = totals["totalMN"].toString() + " MN"  )
+
+        TotalRow(label = "Unidades", total = totals["units"].toString()  )
+
+    }
+}
+
+@Composable
+fun TotalRow(label: String, total: String) {
 
     val fontIndices = MaterialTheme.typography.titleMedium.copy(color = Color.White)
     val fontValues = MaterialTheme.typography.titleLarge.copy(color = Color.White)
 
-    Column(Modifier.padding(horizontal = 12.dp)) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Total en USD", style = fontIndices
-            )
-            Text(
-                text = totals.get("totalUSD").toString() + " USD",
-                style = fontValues,
-                //color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Total en MN", style = fontIndices
-            )
-            Text(
-                text = totals.get("totalMN").toString() + " MN",
-                style = fontValues,
-                // color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Unidades", style = fontIndices
-            )
-            Text(
-                text = totals.get("units")?.toInt().toString(),
-                style = fontValues,
-                //color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = label, style = fontIndices)
+        Text(text = total, style = fontValues)
     }
 }
 

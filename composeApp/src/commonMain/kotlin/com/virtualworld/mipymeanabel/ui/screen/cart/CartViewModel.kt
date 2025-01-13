@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.data.model.AuthenticationState
-import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
-import kotlinx.coroutines.Dispatchers
+import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 import kotlin.math.round
-import kotlin.text.padStart
 
 
 class CartViewModel(
@@ -66,10 +64,7 @@ class CartViewModel(
     }
 
     private fun getProductsCart() {
-
-
         viewModelScope.launch {
-
             getProductCartUseCase().collect { products ->
 
                 _products.update {
@@ -84,11 +79,8 @@ class CartViewModel(
                     }
 
                 }
-
                 getTotals()
-
             }
-
         }
     }
 
