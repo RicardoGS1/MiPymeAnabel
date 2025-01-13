@@ -1,54 +1,61 @@
 package com.virtualworld.mipymeanabel.ui.screen.cart
 
+import androidx.compose.material3.CalendarLocale
+import androidx.compose.material3.DatePicker
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.dto.OrderProducts
-import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
+import com.virtualworld.mipymeanabel.data.model.AuthenticationState
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
+import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
+import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
+import com.virtualworld.mipymeanabel.ui.screen.utils.roundToDecimals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.pow
-import kotlin.math.round
-import kotlin.text.padStart
-
-
 
 
 class CartViewModel(
     private val getProductCartUseCase: GetProductCartUseCase,
     private val addOrderUseCase: AddOrderUseCase,
-    private val deletCartUseCase: DeletCartUseCase,
+    private val deleteCartUseCase: DeletCartUseCase,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     private val _products = MutableStateFlow<List<ProductCart>>(emptyList())
-    val productsState: StateFlow<List<ProductCart>> get() = _products
+    val productsState: StateFlow<List<ProductCart>> get() = _products.asStateFlow()
 
     private val _quantity = MutableStateFlow<Map<Long, Int>>(emptyMap())
     val quantity: StateFlow<Map<Long, Int>> get() = _quantity
 
-    private val _totals = MutableStateFlow<Map<String, Float>>(emptyMap())
-    val totals: StateFlow<Map<String, Float>> get() = _totals
+    private val _totals = MutableStateFlow<DataTotals>(DataTotals())
+    val totals: StateFlow<DataTotals> get() = _totals
 
     private val _dateDelivery = MutableStateFlow<Long>(0L)
     val dateDelivery: Flow<String> = _dateDelivery.map { millis ->
         if (millis == 0L) "" else convertMillisToDate(millis)
     }
 
+    private val _isAuthenticate = MutableStateFlow<Boolean>(false)
+    val isAuthenticate: StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
+
     init {
         getProductsCart()
+        checkAuth()
     }
 
+    //Collect products in cart and calculate totals
     private fun getProductsCart() {
-
         viewModelScope.launch {
-
             getProductCartUseCase().collect { products ->
 
                 _products.update {
@@ -56,26 +63,49 @@ class CartViewModel(
                 }
 
                 for (product in products) {
-                    if (_quantity.value[product.idp] == null) { //  _quantity.value.isEmpty())
+                    if (_quantity.value[product.idp] == null) {
                         _quantity.update {
                             products.associate { it.idp to 1 }
                         }
                     }
 
                 }
-
-                getTotals()
-
+                calculateTotals()
             }
-
         }
     }
 
-    private fun getTotals() {
+    //Checking if the user is authenticated
+    private fun checkAuth() {
+        viewModelScope.launch {
+            authUseCase.loadUser().collect { state ->
+
+                if (state is AuthenticationState.Authenticated) {
+                    _isAuthenticate.value = true
+                }
+
+            }
+        }
+    }
+
+    //Update quantity and recalculate
+    fun updateQuantity(idp: Long, unit: Int) {
+
+        _quantity.update { currentQuantity ->
+
+            val newQuantity = currentQuantity[idp]?.plus(unit) ?: 0
+            if (newQuantity >= 0) currentQuantity.plus(idp to newQuantity)
+            else currentQuantity
+        }
+        calculateTotals()
+    }
+
+    //Calculate Totals
+    private fun calculateTotals() {
 
         var totalUSD = 0f
         var totalMN = 0f
-        var units = 0f
+        var units = 0
 
         _products.value.forEach { prod ->
 
@@ -83,48 +113,28 @@ class CartViewModel(
             val priceMN = prod.priceMN
 
             totalUSD += priceUSD * _quantity.value[prod.idp]!!
-
             totalMN += priceMN * _quantity.value[prod.idp]!!
-
             units += _quantity.value[prod.idp]!!
-
         }
 
 
         _totals.update {
-            mapOf("totalUSD" to totalUSD.roundToDecimals(2)) + mapOf(
-                "totalMN" to totalMN.roundToDecimals(
-                    2
-                )
-            ) + mapOf("units" to units)
-
+            DataTotals(
+                totalUSD.roundToDecimals(2),
+                totalMN.roundToDecimals(2),
+                units
+            )
         }
-
-
     }
 
-    fun updateQuantity(idp: Long, unit: Int) {
-
-        _quantity.update { currentQuantity ->
-
-            val newQuantity = currentQuantity[idp]?.plus(unit) ?: 0
-            if (newQuantity >= 0)
-                currentQuantity.plus(idp to newQuantity)
-            else
-                currentQuantity
-        }
-
-        getTotals()
-
-    }
-
+    //Set Order
     fun onClickAddOrder() {
 
         if (_products.value.isNotEmpty()) {
 
-            val name = "huhuniu"
-            val dateDelviry = "23/223/23"
-            val dateActual = "343/43/43"
+            val name = "Nueva Orden"
+            val dateDelviry = _dateDelivery.toString()
+            val dateActual =  ""  //el repository se encarga
 
             val orderProducts = _products.value.map {
                 OrderProducts(
@@ -147,57 +157,17 @@ class CartViewModel(
 
 
             viewModelScope.launch {
-
-
                 addOrderUseCase(myOrder)
-                deletCartUseCase.deleteCart()
-
+                deleteCartUseCase.deleteCart()
             }
         }
 
     }
 
-    fun changerDateDelivery(date: Long){
+    fun changerDateDelivery(date: Long) {
         _dateDelivery.value = date
     }
 
 
 }
 
-fun convertMillisToDate(millis: Long): String {
-    val daysInMonth = intArrayOf(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-    var days = millis / 86400000 // Milisegundos en un día
-    var year = 1970
-    while (true) {
-        val daysInYear = if (isLeapYear(year)) 366 else 365
-        if (days >= daysInYear) {
-            days -= daysInYear
-            year++
-        } else {
-            break
-        }
-    }
-    var month = 1
-    while (true) {
-        val daysInCurrentMonth = if (month == 2 && isLeapYear(year)) 29 else daysInMonth[month]
-        if (days >= daysInCurrentMonth) {
-            days -= daysInCurrentMonth
-            month++
-        } else {
-            break
-        }
-    }
-    val day = days + 1
-    return "${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/$year"
-}
-
-fun isLeapYear(year: Int): Boolean {
-    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
-}
-
-
-
-fun Float.roundToDecimals(decimals: Int): Float {
-    val multiplier = 10.0f.pow(decimals)
-    return round(this * multiplier) / multiplier
-}
