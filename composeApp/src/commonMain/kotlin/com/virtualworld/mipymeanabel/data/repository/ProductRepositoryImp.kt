@@ -9,9 +9,12 @@ import com.virtualworld.mipymeanabel.data.mapper.toProductCart
 import com.virtualworld.mipymeanabel.data.source.local.RoomDataSource
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseDataSource
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class ProductRepositoryImp(
@@ -80,7 +83,7 @@ class ProductRepositoryImp(
 
             }
 
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun getProductById(productId: String): Flow<NetworkResponseState<ProductAll>> =

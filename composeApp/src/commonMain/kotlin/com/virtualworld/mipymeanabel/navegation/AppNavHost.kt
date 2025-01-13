@@ -31,11 +31,15 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             navController.navigateToDetailDestination(RouteDetail.route + "/$productId")
         }
 
+        val navProfiler: () -> Unit = {
+            navController.navigate(RouteProfile.route)
+        }
+
         composable(RouteHome.route) {
             HomeScreen(onProductClicked = onProductClicked)
         }
         composable(RouteCart.route) {
-            CartScreen(cartViewModel = koinViewModel(), onProductClicked = onProductClicked)
+            CartScreen(cartViewModel = koinViewModel(), onProductClicked = onProductClicked, navProfiler = navProfiler)
         }
         //+"/{productId}"
         composable(
