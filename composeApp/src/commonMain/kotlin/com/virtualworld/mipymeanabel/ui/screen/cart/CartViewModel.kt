@@ -10,6 +10,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
+import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +35,8 @@ class CartViewModel(
     private val _quantity = MutableStateFlow<Map<Long, Int>>(emptyMap())
     val quantity: StateFlow<Map<Long, Int>> get() = _quantity
 
-    private val _totals = MutableStateFlow<Map<String, Float>>(emptyMap())
-    val totals: StateFlow<Map<String, Float>> get() = _totals
+    private val _totals = MutableStateFlow<DataTotals>(DataTotals())
+    val totals: StateFlow<DataTotals> get() = _totals
 
     private val _dateDelivery = MutableStateFlow<Long>(0L)
     val dateDelivery: Flow<String> = _dateDelivery.map { millis ->
@@ -43,7 +44,7 @@ class CartViewModel(
     }
 
     private val _isAuthenticate = MutableStateFlow<Boolean>(false)
-    val isAuthenticate : StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
+    val isAuthenticate: StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
 
     init {
         getProductsCart()
@@ -51,12 +52,12 @@ class CartViewModel(
     }
 
 
-    private fun checkAuth(){
+    private fun checkAuth() {
         viewModelScope.launch {
-            authUseCase.loadUser().collect { state->
+            authUseCase.loadUser().collect { state ->
 
-                if(state is AuthenticationState.Authenticated ){
-                    _isAuthenticate.value=true
+                if (state is AuthenticationState.Authenticated) {
+                    _isAuthenticate.value = true
                 }
 
             }
@@ -88,7 +89,7 @@ class CartViewModel(
 
         var totalUSD = 0f
         var totalMN = 0f
-        var units = 0f
+        var units = 0
 
         _products.value.forEach { prod ->
 
@@ -105,15 +106,13 @@ class CartViewModel(
 
 
         _totals.update {
-            mapOf("totalUSD" to totalUSD.roundToDecimals(2)) + mapOf(
-                "totalMN" to totalMN.roundToDecimals(
-                    2
-                )
-            ) + mapOf("units" to units)
+
+            DataTotals(
+                totalUSD.roundToDecimals(2), totalMN.roundToDecimals(2), units
+            )
+
 
         }
-
-
     }
 
     fun updateQuantity(idp: Long, unit: Int) {
