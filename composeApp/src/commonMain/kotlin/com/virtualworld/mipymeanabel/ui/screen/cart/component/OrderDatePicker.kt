@@ -104,7 +104,7 @@ fun OrderDatePicker(
                     }
 
                     Text(
-                        "Selccione una fecha para recojer su pedido",
+                        "Selccione la fecha en la que desea recoger su orden",
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         fontSize = 18.sp,
                         color = Color.White,

@@ -93,7 +93,7 @@ fun SendOrder(
                     }
 
                     Text(
-                        "Revise su pedido y a continucion envielo para completar la orden",
+                        "Revise su pedido y a continuación envía la orden para finalizar el proceso",
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         fontSize = 18.sp,
                         color = Color.White,

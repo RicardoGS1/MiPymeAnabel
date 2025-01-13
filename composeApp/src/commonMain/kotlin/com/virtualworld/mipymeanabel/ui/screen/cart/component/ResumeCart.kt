@@ -96,7 +96,7 @@ fun ResumeCart(
                             ),
 
                             ) {
-                            Text("Planificar pedido >")
+                            Text("Planificar Orden >")
                         }
 
 
