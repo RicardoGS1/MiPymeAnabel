@@ -117,7 +117,7 @@ class ProductRepositoryImp(
                 }
             }
 
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun getProductCart(): Flow<List<ProductCart>> {
 
@@ -133,6 +133,10 @@ class ProductRepositoryImp(
 
     override suspend fun deleteAllCart() {
         roomDataSource.deleteAllCart()
+    }
+
+    override fun getAllBanels(): Flow<NetworkResponseState<List<String>>> {
+       return firebaseDataSource.getAllBanels()
     }
 
 

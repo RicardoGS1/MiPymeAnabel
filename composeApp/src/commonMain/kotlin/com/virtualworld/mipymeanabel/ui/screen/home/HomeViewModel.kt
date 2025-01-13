@@ -6,6 +6,8 @@ import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
 import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetBanelUseCase
+import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,11 +19,18 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getAllProductUseCase: GetAllProductUseCase,
-    private val addFavoriteUseCase: AddFavoriteUseCase
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val getBanelUseCase: GetBanelUseCase
 ) : ViewModel() {
 
-    private val _allProducts = MutableStateFlow<List<ProductAll>>(emptyList())
-    val productsState: StateFlow<List<ProductAll>> get() = filteredProductsState()
+//    private val _screenState = MutableStateFlow<ScreenStates> (ScreenStates.Loading)
+//    val screenState: StateFlow<ScreenStates> get() = _screenState
+
+    private val _allProducts = MutableStateFlow<ScreenStates<List<ProductAll>>>(ScreenStates.Loading)
+    val productsState: StateFlow<ScreenStates<List<ProductAll>>> get() = filteredProductsState()
+
+    private val _allBanel = MutableStateFlow<ScreenStates<List<String>>>(ScreenStates.Loading)
+    val allBanel: StateFlow<ScreenStates<List<String>>> get() = _allBanel
 
     private val _categoryState = MutableStateFlow<List<String>>(emptyList())
     val categoryState: StateFlow<List<String>> get() = _categoryState.asStateFlow()
@@ -36,7 +45,26 @@ class HomeViewModel(
 
     init {
         getAllProducts()
+        getAllBanel()
 
+    }
+
+    private fun getAllBanel() {
+        viewModelScope.launch {
+
+            getBanelUseCase().collect { banel->
+
+                when(banel){
+                    is NetworkResponseState.Error -> { _allBanel.value = ScreenStates.Error(banel.exception.message.toString())  }
+                    NetworkResponseState.Loading -> { _allBanel.value = ScreenStates.Loading }
+                    is NetworkResponseState.Success -> {
+                        println(banel.result)
+                        _allBanel.value = ScreenStates.Success(banel.result)
+                    }
+                }
+            }
+
+        }
     }
 
     private fun getAllProducts() {
@@ -47,13 +75,14 @@ class HomeViewModel(
             getAllProductUseCase().collect { listProducts ->
 
                 when (listProducts) {
-                    is NetworkResponseState.Error -> {}
-                    NetworkResponseState.Loading -> {}
+                    is NetworkResponseState.Error -> { _allProducts.value = ScreenStates.Error(listProducts.exception.message.toString())    }
+                    NetworkResponseState.Loading -> {_allProducts.value = ScreenStates.Loading  }
                     is NetworkResponseState.Success -> {
 
-                        _allProducts.update { listProducts.result }
+                        _allProducts.update { ScreenStates.Success(listProducts.result) }
+
                         _categoryState.update {
-                            listOf("Todos", "Favorites") + _allProducts.value.map { it.category }
+                            listOf("Todos", "Favorites") + listProducts.result.map { it.category }
                                 .distinct()
                         }
 
@@ -67,21 +96,39 @@ class HomeViewModel(
 
     }
 
-    private fun filteredProductsState(): StateFlow<List<ProductAll>> =
+    private fun filteredProductsState(): StateFlow<ScreenStates<List<ProductAll>>> =
         combine(
             _searchText,
             _selectedCategoryState,
             _allProducts
         ) { text, category, listAllProducts ->
 
-            listAllProducts.filter { product ->
-                product.name.contains(text, ignoreCase = true) &&
-                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
+
+            when (listAllProducts) {
+                is ScreenStates.Success -> {
+                    val filteredProducts = listAllProducts.result.filter { product ->
+                        product.name.contains(text, ignoreCase = true) &&
+                                (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
+                    }
+                    ScreenStates.Success(filteredProducts)
+                }
+                is ScreenStates.Error -> ScreenStates.Error(listAllProducts.exception)
+                is ScreenStates.Loading -> ScreenStates.Loading
             }
+//
+//            if( listAllProducts as ScreenStates.Success ){
+//
+//            }
+//
+//            listAllProducts .filter { product ->
+//                product.name.contains(text, ignoreCase = true) &&
+//                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
+//            }
 
         }.stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(), _allProducts.value
+            SharingStarted.WhileSubscribed(),
+            _allProducts.value
         )
 
 
