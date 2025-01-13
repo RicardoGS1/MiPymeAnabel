@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,17 +18,16 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,14 +40,52 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
 
 @Composable
 fun GridProducts(
     listState: LazyGridState,
-    products: List<ProductAll>,
+    products: ScreenStates<List<ProductAll>>,
     onClickFavorite: (String) -> Unit,
     onProductClicked: (String) -> Unit
 ) {
+
+    when(products){
+        is ScreenStates.Error -> {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+
+                Column (modifier = Modifier.fillMaxWidth()){
+                    Text(products.exception)
+                    IconButton(onClick = {}){
+                        Icons.Filled.Refresh
+                    }
+                }
+
+            }
+
+        }
+        is ScreenStates.Loading -> {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+
+                CircularProgressIndicator()
+
+            }
+
+        }
+        is ScreenStates.Success -> {
+
+
+
     LazyVerticalGrid(
         state = listState,
         columns = GridCells.Adaptive(180.dp),
@@ -57,7 +96,7 @@ fun GridProducts(
 
     ) {
 
-        items(products, key = { it.idp }) {
+        items(products.result, key = { it.idp }) {
             ProductItem(
                 product = it,
                 onProductClicked = onProductClicked,
@@ -65,11 +104,11 @@ fun GridProducts(
             )
         }
 
-        item{
+        item {
             Box(Modifier.size(180.dp))
         }
-
     }
+    }}
 }
 
 @Composable

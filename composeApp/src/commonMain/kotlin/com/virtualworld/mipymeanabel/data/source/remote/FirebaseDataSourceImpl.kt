@@ -73,4 +73,22 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
             NetworkResponseState.Error(e)
         }
     }
+
+    override fun getAllBanels(): Flow<NetworkResponseState<List<String>>> = flow {
+
+        try {
+
+            emit(NetworkResponseState.Loading)
+
+            firestore.collection("BANEL").snapshots.collect { querySnapshot ->
+
+                val banel = querySnapshot.documents.mapNotNull { documentSnapshot ->
+                    documentSnapshot.get("image") as? String
+                }
+                emit(NetworkResponseState.Success(banel))
+            }
+        } catch (e: FirebaseFirestoreException) {
+            emit(NetworkResponseState.Error(e))
+        }
+    }
 }

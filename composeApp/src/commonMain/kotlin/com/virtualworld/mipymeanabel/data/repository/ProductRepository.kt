@@ -19,5 +19,7 @@ interface ProductRepository {
 
     suspend fun deleteAllCart()
 
+    fun getAllBanels() : Flow<NetworkResponseState<List<String>>>
+
 
 }

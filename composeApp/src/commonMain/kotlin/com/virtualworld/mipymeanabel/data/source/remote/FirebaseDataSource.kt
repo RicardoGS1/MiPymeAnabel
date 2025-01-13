@@ -14,4 +14,6 @@ interface FirebaseDataSource {
     suspend fun addOrder(order: Order) : NetworkResponseState<Boolean>
 
     fun getOrders() : Flow<NetworkResponseState<List<Order>>>
+
+    fun getAllBanels() : Flow<NetworkResponseState<List<String>>>
 }

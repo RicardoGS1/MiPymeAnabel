@@ -25,6 +25,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked: (String) -> Unit) {
 
     val products by homeViewModel.productsState.collectAsState()
+    val banel by homeViewModel.allBanel.collectAsState()
     val categories by homeViewModel.categoryState.collectAsState()
     val selectedCategory by homeViewModel.selectedCategoryState.collectAsState()
     val searchText by homeViewModel.searchText.collectAsState()
@@ -50,7 +51,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked
             }
 
             AnimatedVisibility(visible = (searchBarVisible) && searchText.isEmpty()) {
-                ImagePagerView(products.map { it.image })
+                ImagePagerView(banel)
             }
 
             SelectCategory(categories, selectedCategory,updateSelectedCategory)
