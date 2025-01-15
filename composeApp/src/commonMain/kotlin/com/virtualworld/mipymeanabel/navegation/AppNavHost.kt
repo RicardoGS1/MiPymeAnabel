@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.virtualworld.mipymeanabel.ui.screen.cart.CartScreen
 import com.virtualworld.mipymeanabel.ui.screen.detail.DetailScreen
 import com.virtualworld.mipymeanabel.ui.screen.home.HomeScreen
+import com.virtualworld.mipymeanabel.ui.screen.main.BottomNavItem
 import com.virtualworld.mipymeanabel.ui.screen.profile.ProfileScreen
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -32,7 +33,7 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
         }
 
         val navProfiler: () -> Unit = {
-            navController.navigate(RouteProfile.route)
+            navController.navigateToBottomNavDestination( BottomNavItem.Profile )
         }
 
         composable(RouteHome.route) {
