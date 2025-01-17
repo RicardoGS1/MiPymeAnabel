@@ -5,20 +5,30 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.virtualworld.mipymeanabel.ui.screen.main.BottomNavItem
 
 fun NavController.navigateToBottomNavDestination(item: BottomNavItem) {
+
     navigate(item.route) {
-        popUpTo(graph.findStartDestination().route!! ) {
+
+        if (this@navigateToBottomNavDestination.currentBackStackEntry?.destination?.route == RouteDetail.route + "/{productId}") {
+            popBackStack()
+        }
+
+        popUpTo(graph.findStartDestination().route!!) {
             this.saveState = true
         }
-        restoreState = false
+
+
+        restoreState = true
         launchSingleTop = true
+
     }
+
 }
 
 fun NavController.navigateToDetailDestination(screen: String) {
 
     navigate(screen) {
-
+        saveState()
     }
 
-
 }
+
