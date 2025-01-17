@@ -54,6 +54,11 @@ fun SelectSign(
         visibleSignUpCard = true
     }
 
+    val changerVisibleSignUpCard = {
+        visibleSignInCard = true
+        visibleSignUpCard = false
+    }
+
 
 
     Box(
@@ -147,7 +152,7 @@ fun SelectSign(
 
 
         SignInCard(Modifier.align(Alignment.BottomCenter), visibleSignInCard, signIn, signInState, changerVisibleSignInCard)
-        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp, signUpState)
+        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp, signUpState, changerVisibleSignUpCard)
 
     }
 
