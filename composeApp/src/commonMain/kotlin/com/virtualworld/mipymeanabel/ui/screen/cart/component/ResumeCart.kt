@@ -28,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.virtualworld.mipymeanabel.ui.screen.common.AlertDialogCommon
-import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
+import com.virtualworld.mipymeanabel.ui.screen.common.view.AlertDialogCommon
+import com.virtualworld.mipymeanabel.ui.screen.common.model.DataTotals
 
 @Composable
 fun ResumeCart(

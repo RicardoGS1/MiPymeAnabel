@@ -12,7 +12,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
-import com.virtualworld.mipymeanabel.ui.screen.model.DataTotals
+import com.virtualworld.mipymeanabel.ui.screen.common.model.DataTotals
 import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
 import com.virtualworld.mipymeanabel.ui.screen.utils.roundToDecimals
 import kotlinx.coroutines.flow.Flow
