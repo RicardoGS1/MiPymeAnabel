@@ -116,7 +116,7 @@ fun SignInCard(
 
 
                 ) {
-                    Text(text = "SignIn", fontSize = 22.sp)
+                    Text(text = "Iniciar Sesíon", fontSize = 22.sp)
                 }
 
                 if (signInState is SignResponseState.Error) {

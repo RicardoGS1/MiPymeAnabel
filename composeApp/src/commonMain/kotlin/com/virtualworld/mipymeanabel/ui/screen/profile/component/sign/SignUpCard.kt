@@ -185,10 +185,11 @@ fun SignUpCard(
 
                 Text(text = "Ya tienes una cuenta?")
 
+
                 TextButton(
                     onClick = {changerVisibleSignUpCard()},
                 ) {
-                    Text("Iniciar cecion")
+                    Text("Iniciar Sesión")
                 }
             }
         }
