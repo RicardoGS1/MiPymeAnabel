@@ -43,6 +43,7 @@ fun SignUpCard(
     visibleSignInCard: Boolean,
     signUp: (String, String, String) -> Unit,
     signUpState: SignResponseState,
+    changerVisibleSignUpCard: () -> Unit,
 ) {
 
     var name: String by remember { mutableStateOf("") }
@@ -184,10 +185,11 @@ fun SignUpCard(
 
                 Text(text = "Ya tienes una cuenta?")
 
+
                 TextButton(
-                    onClick = {},
+                    onClick = {changerVisibleSignUpCard()},
                 ) {
-                    Text("Iniciar cecion")
+                    Text("Iniciar Sesión")
                 }
             }
         }

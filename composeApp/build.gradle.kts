@@ -105,7 +105,7 @@ kotlin {
             //ksp("androidx.room:room-compiler:2.7.0-alpha11")
 
 
-            //implementation("androidx.datastore:datastore-preferences:1.1.1")
+            //implementation("com.github.arkivanov:decompose-extensions-compose-jetbrains:0.8.0")
 
 
         }

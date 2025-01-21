@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.virtualworld.mipymeanabel.data.dto.ProductAll
-import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
+import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
 
 @Composable
 fun GridProducts(

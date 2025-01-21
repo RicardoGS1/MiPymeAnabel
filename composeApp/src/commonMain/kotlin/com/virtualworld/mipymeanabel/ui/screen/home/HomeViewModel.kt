@@ -7,7 +7,7 @@ import com.virtualworld.mipymeanabel.data.dto.ProductAll
 import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetBanelUseCase
-import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
+import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.ui.screen.model
+package com.virtualworld.mipymeanabel.ui.screen.common.model
 
 data class DataTotals(
     val totalUSD: Float = 0f,

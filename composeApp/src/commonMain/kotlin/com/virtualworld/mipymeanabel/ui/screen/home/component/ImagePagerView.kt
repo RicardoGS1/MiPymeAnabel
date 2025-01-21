@@ -25,7 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
+import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
 
 @Composable
 fun ImagePagerView(images: ScreenStates<List<String>>) {
