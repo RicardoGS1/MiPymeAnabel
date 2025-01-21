@@ -18,8 +18,7 @@ class ProfileViewModel(
     private val getOrdersUseCase: GetOrdersUseCase
 ) : ViewModel() {
 
-    private val _userState =
-        MutableStateFlow<AuthenticationState<String>>(AuthenticationState.Loading)
+    private val _userState = MutableStateFlow<AuthenticationState<String>>(AuthenticationState.Loading)
     val userState: StateFlow<AuthenticationState<String>> get() = _userState
 
     private val _signInState = MutableStateFlow<SignResponseState>(SignResponseState.Idle)
@@ -44,47 +43,47 @@ class ProfileViewModel(
 
 
             authUseCase.loadUser().collect { authState ->
-
-
                 when (authState) {
-
                     is AuthenticationState.Authenticated -> {
-
-                        getOrdersUseCase(authState.result.uid).collect{ stateOr->
-
-                            when(stateOr){
-                                is NetworkResponseState.Error -> TODO()
-                                is NetworkResponseState.Loading -> TODO()
-                                is NetworkResponseState.Success -> {
-                                    _userState.update { AuthenticationState.Authenticated<String>(authState.result.email.toString()) }
-                                    _ordersState.value = stateOr.result}
-                            }
-
-
-                        }
-
+                        _userState.update { AuthenticationState.Authenticated(authState.result.email.toString()) }
+                        loadOrders(authState.result.uid)
                     }
 
                     is AuthenticationState.AuthenticationError -> {
-
                         _userState.update { AuthenticationState.AuthenticationError(authState.error) }
-
                     }
 
                     is AuthenticationState.Loading -> {
-
                         _userState.update { AuthenticationState.Loading }
                     }
 
                     AuthenticationState.Unauthenticated -> {
-                        AuthenticationState.Unauthenticated
+                        _userState.update { AuthenticationState.Unauthenticated }
                     }
                 }
-
             }
-
         }
 
+
+    }
+
+    private suspend fun loadOrders(uid: String) {
+
+        getOrdersUseCase(uid).collect { stateOr ->
+            when (stateOr) {
+                is NetworkResponseState.Error -> {
+
+                }
+
+                is NetworkResponseState.Loading -> {
+
+                }
+
+                is NetworkResponseState.Success -> {
+                    _ordersState.value = stateOr.result
+                }
+            }
+        }
 
     }
 
@@ -116,7 +115,6 @@ class ProfileViewModel(
         }
 
     }
-
 
 
 }
