@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mipymeanabel.composeapp.generated.resources.Res
 
 
 class CartViewModel(
@@ -47,6 +48,10 @@ class CartViewModel(
 
     private val _isAuthenticate = MutableStateFlow<Boolean>(false)
     val isAuthenticate: StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
+
+    var uid : String? = null
+
+
 
     init {
         getProductsCart()
@@ -81,7 +86,12 @@ class CartViewModel(
             authUseCase.loadUser().collect { state ->
 
                 if (state is AuthenticationState.Authenticated) {
+                    uid=state.result.uid
                     _isAuthenticate.value = true
+                }
+                if(state is AuthenticationState.Unauthenticated){
+                    uid=null
+                    _isAuthenticate.value = false
                 }
 
             }
@@ -157,8 +167,10 @@ class CartViewModel(
 
 
             viewModelScope.launch {
-                addOrderUseCase(myOrder)
-                deleteCartUseCase.deleteCart()
+                if(uid!=null) {
+                    addOrderUseCase(myOrder, uid!!)
+                    deleteCartUseCase.deleteCart()
+                }
             }
         }
 

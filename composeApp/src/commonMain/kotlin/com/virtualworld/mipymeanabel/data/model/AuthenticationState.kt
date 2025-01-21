@@ -1,8 +1,10 @@
 package com.virtualworld.mipymeanabel.data.model
 
-sealed class AuthenticationState {
-    object Unauthenticated : AuthenticationState()
-    object Loading : AuthenticationState()
-    data class Authenticated(val user: String) : AuthenticationState()
-    data class AuthenticationError(val error: String) : AuthenticationState()
+import dev.gitlive.firebase.auth.FirebaseUser
+
+sealed class AuthenticationState <out T : Any> {
+    object Unauthenticated : AuthenticationState<Nothing>()
+    object Loading : AuthenticationState<Nothing>()
+    data class Authenticated<out T : Any>(val result: T) : AuthenticationState<T>()
+    data class AuthenticationError(val error: String) : AuthenticationState<Nothing>()
 }
