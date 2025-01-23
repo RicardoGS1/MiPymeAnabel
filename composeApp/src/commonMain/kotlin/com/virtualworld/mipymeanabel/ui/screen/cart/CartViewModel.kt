@@ -146,9 +146,9 @@ class CartViewModel(
 
         if (_products.value.isNotEmpty()) {
 
-            val name = "Nueva Orden"
+            val state = "Enviada"
             val dateDelviry = _dateDelivery.value.toString()
-            val dateActual =   GMTDate().timestamp.toString()
+
 
             val orderProducts = _products.value.map {
                 OrderProducts(
@@ -163,8 +163,7 @@ class CartViewModel(
 
 
             val myOrder = Order(
-                name = name,
-                dateOrder = dateActual,
+                state = state,
                 dateDelivery = dateDelviry,
                 listOrderProducts = orderProducts
             )

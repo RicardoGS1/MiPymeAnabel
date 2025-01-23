@@ -1,7 +1,5 @@
 package com.virtualworld.mipymeanabel.ui.screen.profile
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,20 +27,7 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
     when(authState){
         is AuthenticationState.Authenticated -> {
 
-            Column(){
-            Text("Bienvenido " + (authState as AuthenticationState.Authenticated).result    )
-
-                Button(
-                    onClick = {
-                        viewModel.signOut()
-                        }
-
-                ) {
-                    Text(text = "SignOut")
-                }
-            }
-
-            ResumeOrder(ordersState)
+            ResumeOrder((authState as AuthenticationState.Authenticated<String>).result ,ordersState)
 
         }
         is AuthenticationState.AuthenticationError -> {
