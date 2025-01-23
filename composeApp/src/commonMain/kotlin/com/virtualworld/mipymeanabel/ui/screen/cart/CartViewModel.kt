@@ -2,6 +2,8 @@ package com.virtualworld.mipymeanabel.ui.screen.cart
 
 import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
@@ -15,6 +17,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.ui.screen.common.model.DataTotals
 import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
 import com.virtualworld.mipymeanabel.ui.screen.utils.roundToDecimals
+import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -137,14 +140,15 @@ class CartViewModel(
         }
     }
 
-    //Set Order
+
     fun onClickAddOrder() {
+
 
         if (_products.value.isNotEmpty()) {
 
             val name = "Nueva Orden"
-            val dateDelviry = _dateDelivery.toString()
-            val dateActual =  ""  //el repository se encarga
+            val dateDelviry = _dateDelivery.value.toString()
+            val dateActual =   GMTDate().timestamp.toString()
 
             val orderProducts = _products.value.map {
                 OrderProducts(
