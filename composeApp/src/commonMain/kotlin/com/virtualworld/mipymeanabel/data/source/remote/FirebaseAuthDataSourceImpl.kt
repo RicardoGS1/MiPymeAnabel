@@ -29,6 +29,11 @@ class FirebaseAuthDataSourceImpl(private val auth: FirebaseAuth) : FirebaseAuthD
 
     }
 
+    override fun getUid(): String {
+        return auth.currentUser!!.uid.toString()
+    }
+
+
     override suspend fun reLoadUser() {
 
         auth.currentUser?.reload()

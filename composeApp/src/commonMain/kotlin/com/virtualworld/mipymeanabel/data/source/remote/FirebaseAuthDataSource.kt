@@ -13,5 +13,7 @@ interface FirebaseAuthDataSource {
 
     fun loadUser(): Flow<FirebaseUser?>
 
+    fun getUid() : String
+
     suspend fun reLoadUser()
 }

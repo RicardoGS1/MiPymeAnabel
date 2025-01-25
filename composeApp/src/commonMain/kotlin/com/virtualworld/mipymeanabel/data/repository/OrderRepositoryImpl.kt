@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 
 class OrderRepositoryImpl(
     private val firebaseDataSource: FirebaseDataSource,
-    private val firebaseAuthDataSource: FirebaseAuthDataSource
 ) : OrderRepository {
 
     override suspend fun addOrder(order: Order, uid: String): NetworkResponseState<Boolean> {
@@ -26,5 +25,13 @@ class OrderRepositoryImpl(
 
 
         return firebaseDataSource.getOrders(uid)
+    }
+
+    override suspend fun getOrderById(
+        uid: String,
+        orderId: String
+    ): Flow<NetworkResponseState<Order>> {
+
+        return firebaseDataSource.getOrderById(uid, orderId)
     }
 }

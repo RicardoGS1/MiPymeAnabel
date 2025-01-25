@@ -59,6 +59,10 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource)
         }
     }
 
+    fun getUid() : String {
+        return firebaseAuthDataSource.getUid()
+    }
+
 
 }
 

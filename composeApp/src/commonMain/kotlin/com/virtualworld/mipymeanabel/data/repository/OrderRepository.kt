@@ -11,5 +11,7 @@ interface OrderRepository {
 
     suspend fun getOrder(uid: String): Flow<NetworkResponseState<List<Order>>>
 
+    suspend fun getOrderById(uid: String, orderId: String): Flow<NetworkResponseState<Order>>
+
 
 }

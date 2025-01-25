@@ -49,7 +49,7 @@ val dataModules = module {
     single<FirebaseDataSource> { FirebaseDataSourceImpl(get()) }
     single<FirebaseAuthDataSource> { FirebaseAuthDataSourceImpl(get()) }
     single<ProductRepository> { ProductRepositoryImp(get(),get()) }
-    single<OrderRepository> { OrderRepositoryImpl(get(), get()) }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<RoomDataSource> { RoomDataSourceImpl(get()) }
 
 
