@@ -1,14 +1,8 @@
 package com.virtualworld.mipymeanabel.ui.screen.profile.component
 
-
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,16 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,11 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -49,17 +35,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.virtualworld.mipymeanabel.data.dto.Order
-import com.virtualworld.mipymeanabel.data.model.AuthenticationState
-import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.TitleSign
 import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
-import kotlinx.coroutines.launch
 import mipymeanabel.composeapp.generated.resources.Res
 import mipymeanabel.composeapp.generated.resources.YoungSerif_Regular
 import org.jetbrains.compose.resources.Font
 
 
 @Composable
-fun ResumeOrder(mail: String, ordersState: List<Order>) {
+fun ResumeOrder(mail: String, ordersState: List<Order>, signOut: () -> Unit) {
 
     val visible = remember { mutableStateOf(false) }
 
@@ -85,59 +68,69 @@ fun ResumeOrder(mail: String, ordersState: List<Order>) {
 
                 item {
 
-                    AnimatedVisibility(visible = visible.value,
-                        enter = slideInVertically { fullHeight -> -fullHeight },
-                        exit = slideOutVertically { fullHeight -> -fullHeight }) {
 
-                        Box(Modifier.fillMaxSize().clickable { }) {
-
-                            Box(
-                                Modifier.fillMaxWidth()
-                                    .background(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                primaryColor,
-                                                darkerPrimaryColor
-                                            )
-                                        ),
-                                        shape = RoundedCornerShape(
-                                            bottomStart = 0.dp,
-                                            bottomEnd = 60.dp
-                                        )
-                                    ).clickable(enabled = false) {}
-                                    .align(Alignment.TopCenter)
-                            ) {
-
-                                Column(
-                                    Modifier.padding(horizontal = 16.dp).padding(bottom = 72.dp),
-                                    //verticalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    Text(
-                                        text = "Registro de Ordenes",
-                                        style = MaterialTheme.typography.titleLarge,
-                                        //fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface ,
-                                        fontSize = 32.sp,
-                                        fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular)),
-                                        modifier = Modifier.padding(vertical = 8.dp)
+                    Box(
+                        Modifier.fillMaxWidth()
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(
+                                        primaryColor,
+                                        darkerPrimaryColor
                                     )
+                                ),
+                                shape = RoundedCornerShape(
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 60.dp
+                                )
+                            ).clickable(enabled = false) {}
+                            .align(Alignment.TopCenter)
+                    ) {
 
-                                    Text("Usuario: $mail", style = MaterialTheme.typography.titleLarge)
-                                    Text("Correo: $mail", style = MaterialTheme.typography.titleMedium)
-                                    Text("Numero: 0000000", style = MaterialTheme.typography.titleMedium)
+                        Column(
+                            Modifier.padding(horizontal = 16.dp).padding(bottom = 72.dp),
+                            //verticalArrangement = Arrangement.SpaceAround
+                        ) {
+                            Text(
+                                text = "Sesión",
+                                style = MaterialTheme.typography.titleLarge,
+                                //fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 32.sp,
+                                fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular)),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
 
+                            Text("Usuario: $mail", style = MaterialTheme.typography.titleLarge)
+                            Text("Correo: $mail", style = MaterialTheme.typography.titleMedium)
+                            Text("Numero: 0000000", style = MaterialTheme.typography.titleMedium)
 
-                                }
-
-                                TextButton(onClick = {},Modifier.align(Alignment.BottomEnd).padding(end = 30.dp, bottom = 20.dp)){
-                                    Text("Cerrar Sesion", color = MaterialTheme.colorScheme.onPrimary)
-                                }
-
-
-                            }
 
                         }
+
+                        TextButton(
+                            onClick = { signOut() },
+                            Modifier.align(Alignment.BottomEnd).padding(end = 30.dp, bottom = 20.dp)
+                        ) {
+                            Text("Cerrar Sesion", color = MaterialTheme.colorScheme.onPrimary)
+                        }
+
+
                     }
+
+
+                }
+
+                item {
+
+                    Text(
+                        text = "Ordenes",
+                        style = MaterialTheme.typography.titleLarge,
+                        //fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 32.sp,
+                        fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular)),
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                    )
 
                 }
 
