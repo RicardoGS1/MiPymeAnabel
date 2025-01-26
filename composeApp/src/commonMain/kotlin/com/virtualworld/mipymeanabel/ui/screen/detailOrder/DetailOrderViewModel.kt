@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.model.AuthenticationState
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
+import com.virtualworld.mipymeanabel.domain.models.OrderDetail
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletedOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrderByIdUseCase
@@ -21,8 +22,8 @@ class DetailOrderViewModel(
     private val getOrderByIdUseCase: GetOrderByIdUseCase,
 ) : ViewModel() {
 
-    private val _orderState = MutableStateFlow<ScreenStates<Order>>(ScreenStates.Loading)
-    val orderState: StateFlow<ScreenStates<Order>> get() = _orderState.asStateFlow()
+    private val _orderState = MutableStateFlow<ScreenStates<OrderDetail>>(ScreenStates.Loading)
+    val orderState: StateFlow<ScreenStates<OrderDetail>> get() = _orderState.asStateFlow()
 
     init {
 

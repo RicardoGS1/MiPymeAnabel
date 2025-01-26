@@ -63,12 +63,12 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
 
                         val orders = it.documents.map { documentSnapshot ->
                             documentSnapshot.data<Order>()
+                                .copy(listOrderProducts = emptyList()) // hay que separar la lista de de la orden proximamente
                         }
-                        println("getOrders: $orders")
                         emit(NetworkResponseState.Success(orders))
                     }
             } else {
-                emit(NetworkResponseState.Success( emptyList() ))
+                emit(NetworkResponseState.Success(emptyList()))
             }
         } catch (e: Exception) {
             NetworkResponseState.Error(e)
@@ -93,9 +93,10 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
         }
     }
 
-    override fun getOrderById(uid: String, orderId: String): Flow<NetworkResponseState<Order>> = flow{
+    override fun getOrderById(uid: String, orderId: String): Flow<NetworkResponseState<Order>> =
+        flow {
 
-        try {
+            try {
 
                 firestore.collection("orders")
                     .document(uid)
@@ -103,16 +104,16 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
                     .document(orderId)
                     .snapshots.collect {
 
-                            val orders = it.data<Order>()
+                        val orders = it.data<Order>()
 
-                            emit(NetworkResponseState.Success(orders))
+                        emit(NetworkResponseState.Success(orders))
 
                     }
-        } catch (e: Exception) {
-            NetworkResponseState.Error(e)
-        }
+            } catch (e: Exception) {
+                NetworkResponseState.Error(e)
+            }
 
-       }
+        }
 
 
 }

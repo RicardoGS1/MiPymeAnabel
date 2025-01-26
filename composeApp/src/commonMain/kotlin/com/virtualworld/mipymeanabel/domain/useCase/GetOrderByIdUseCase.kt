@@ -4,12 +4,13 @@ import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.repository.AuthRepository
 import com.virtualworld.mipymeanabel.data.repository.OrderRepository
+import com.virtualworld.mipymeanabel.domain.models.OrderDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class GetOrderByIdUseCase (private val orderRepository: OrderRepository, private val authRepository: AuthRepository)  {
 
-    suspend operator fun invoke(orderId:String): Flow<NetworkResponseState<Order>>{
+    suspend operator fun invoke(orderId:String): Flow<NetworkResponseState<OrderDetail>>{
 
         val uid = authRepository.getUid()
 
