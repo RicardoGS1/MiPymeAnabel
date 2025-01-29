@@ -42,7 +42,12 @@ import org.jetbrains.compose.resources.Font
 
 
 @Composable
-fun ResumeOrder(mail: String, ordersState: List<Order>, signOut: () -> Unit) {
+fun ResumeOrder(
+    mail: String,
+    ordersState: List<Order>,
+    signOut: () -> Unit,
+    onOrderClicked: (String) -> Unit
+) {
 
     val visible = remember { mutableStateOf(false) }
 
@@ -137,7 +142,7 @@ fun ResumeOrder(mail: String, ordersState: List<Order>, signOut: () -> Unit) {
                 items(ordersState) { order ->
 
 
-                    ItemOrder(order)
+                    ItemOrder(order,onOrderClicked)
 
 
                 }
@@ -156,7 +161,7 @@ fun ResumeOrder(mail: String, ordersState: List<Order>, signOut: () -> Unit) {
 }
 
 @Composable
-fun ItemOrder(order: Order) {
+fun ItemOrder(order: Order, onOrderClicked: (String) -> Unit) {
 
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(vertical = 4.dp)
@@ -232,7 +237,7 @@ fun ItemOrder(order: Order) {
 
 
             Box(
-                Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary).clickable { },
+                Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary).clickable { onOrderClicked( order.number ) },
                 contentAlignment = Alignment.Center,
             ) {
 

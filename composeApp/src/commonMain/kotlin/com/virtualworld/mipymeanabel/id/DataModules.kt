@@ -19,8 +19,10 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.DeletedOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetBanelUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetOrderByIdUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductByIdUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
@@ -47,7 +49,7 @@ val dataModules = module {
     single<FirebaseDataSource> { FirebaseDataSourceImpl(get()) }
     single<FirebaseAuthDataSource> { FirebaseAuthDataSourceImpl(get()) }
     single<ProductRepository> { ProductRepositoryImp(get(),get()) }
-    single<OrderRepository> { OrderRepositoryImpl(get(), get()) }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<RoomDataSource> { RoomDataSourceImpl(get()) }
 
 
@@ -65,6 +67,8 @@ val dataModules = module {
     factoryOf(::GetOrdersUseCase)
     factoryOf(::DeletCartUseCase)
     factoryOf(::GetBanelUseCase)
+    factoryOf(::DeletedOrderUseCase)
+    factoryOf(::GetOrderByIdUseCase)
 
 
 

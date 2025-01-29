@@ -47,15 +47,12 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
 
         firestore.collection("orders")
             .document(uid).collection("collectionOrders")
-            .document.set(order)
+            .document(order.number).set(order)
 
         return NetworkResponseState.Success(true)
     }
 
     override fun getOrders(uid: String?): Flow<NetworkResponseState<List<Order>>> = flow {
-
-        println(uid)
-
 
         try {
             if (uid != null) {
@@ -66,12 +63,12 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
 
                         val orders = it.documents.map { documentSnapshot ->
                             documentSnapshot.data<Order>()
+                                .copy(listOrderProducts = emptyList()) // hay que separar la lista de de la orden proximamente
                         }
-                        println("getOrders: $orders")
                         emit(NetworkResponseState.Success(orders))
                     }
             } else {
-                emit(NetworkResponseState.Success( emptyList() ))
+                emit(NetworkResponseState.Success(emptyList()))
             }
         } catch (e: Exception) {
             NetworkResponseState.Error(e)
@@ -95,4 +92,28 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
             emit(NetworkResponseState.Error(e))
         }
     }
+
+    override fun getOrderById(uid: String, orderId: String): Flow<NetworkResponseState<Order>> =
+        flow {
+
+            try {
+
+                firestore.collection("orders")
+                    .document(uid)
+                    .collection("collectionOrders")
+                    .document(orderId)
+                    .snapshots.collect {
+
+                        val orders = it.data<Order>()
+
+                        emit(NetworkResponseState.Success(orders))
+
+                    }
+            } catch (e: Exception) {
+                NetworkResponseState.Error(e)
+            }
+
+        }
+
+
 }

@@ -10,7 +10,7 @@ import com.virtualworld.mipymeanabel.ui.screen.profile.component.ResumeOrder
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.sign.SelectSign
 
 @Composable
-fun ProfileScreen( viewModel: ProfileViewModel  ) {
+fun ProfileScreen(viewModel: ProfileViewModel, onOrderClicked: (String) -> Unit) {
 
     val authState by viewModel.userState.collectAsState()
 
@@ -28,7 +28,7 @@ fun ProfileScreen( viewModel: ProfileViewModel  ) {
     when(authState){
         is AuthenticationState.Authenticated -> {
 
-            ResumeOrder((authState as AuthenticationState.Authenticated<String>).result ,ordersState,signOut)
+            ResumeOrder((authState as AuthenticationState.Authenticated<String>).result ,ordersState,signOut,onOrderClicked)
 
         }
         is AuthenticationState.AuthenticationError -> {

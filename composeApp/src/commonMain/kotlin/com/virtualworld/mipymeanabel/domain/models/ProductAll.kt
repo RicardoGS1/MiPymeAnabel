@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.data.dto
+package com.virtualworld.mipymeanabel.domain.models
 
 data class ProductAll(
     val idp: String = "",

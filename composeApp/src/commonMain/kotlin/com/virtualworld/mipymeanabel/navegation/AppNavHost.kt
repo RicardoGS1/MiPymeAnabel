@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.virtualworld.mipymeanabel.ui.screen.cart.CartScreen
 import com.virtualworld.mipymeanabel.ui.screen.detail.DetailScreen
+import com.virtualworld.mipymeanabel.ui.screen.detailOrder.DetailOrderScreen
 import com.virtualworld.mipymeanabel.ui.screen.home.HomeScreen
 import com.virtualworld.mipymeanabel.ui.screen.main.BottomNavItem
 import com.virtualworld.mipymeanabel.ui.screen.profile.ProfileScreen
@@ -32,6 +33,10 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             navController.navigateToDetailDestination(RouteDetail.route + "/$productId")
         }
 
+        val onOrderClicked: (String) -> Unit = { orderId ->
+            navController.navigateToDetailDestination(RouteDetailOrder.route + "/$orderId")
+        }
+
         val navProfiler: () -> Unit = {
             navController.navigateToBottomNavDestination( BottomNavItem.Profile )
         }
@@ -51,7 +56,17 @@ fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
             DetailScreen(detailViewModel = koinViewModel(parameters = { parametersOf(productId) }))
         }
         composable(RouteProfile.route) {
-            ProfileScreen(viewModel = koinViewModel())
+            ProfileScreen(viewModel = koinViewModel(),onOrderClicked = onOrderClicked,)
+        }
+
+        composable(
+            RouteDetailOrder.route + "/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ){ navBackStackEntry ->
+
+            val orderId = navBackStackEntry.arguments?.getString("orderId")
+            DetailOrderScreen(detailOrderViewModel = koinViewModel(parameters = { parametersOf(orderId) }))
+
         }
 
     }

@@ -16,4 +16,6 @@ interface FirebaseDataSource {
     fun getOrders(uid: String?): Flow<NetworkResponseState<List<Order>>>
 
     fun getAllBanels() : Flow<NetworkResponseState<List<String>>>
+
+    fun getOrderById(uid: String, orderId: String) : Flow<NetworkResponseState<Order>>
 }
