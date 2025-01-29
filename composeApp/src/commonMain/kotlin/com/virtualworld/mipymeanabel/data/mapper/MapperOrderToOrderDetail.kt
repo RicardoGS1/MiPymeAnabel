@@ -12,7 +12,8 @@ fun Order.toOrderDetail() : OrderDetail {
         state = this.state,
         dateOrder = this.dateOrder,
         dateDelivery = this.dateDelivery,
-        importTotal = calculateTotalImport(this.listOrderProducts).toString(),
+        importTotalUSD = calculateTotalImport(this.listOrderProducts).toString(),
+        importTotalMN = calculateTotalImportMN(this.listOrderProducts).toString(),
         unitTotal =  calculateTotalUnit(this.listOrderProducts) .toString(),
         listOrderProducts = this.listOrderProducts
 
@@ -41,6 +42,17 @@ fun calculateTotalImport(listOrderProducts: List<OrderProducts>): Float {
 
     listOrderProducts.forEach { product ->
         val priceUsd = product.priceUsd.toFloatOrNull() ?: 0.0f
+        totalUsd += priceUsd * product.unit.toInt()
+    }
+    return totalUsd
+}
+
+fun calculateTotalImportMN(listOrderProducts: List<OrderProducts>): Float {
+
+    var totalUsd = 0.0f
+
+    listOrderProducts.forEach { product ->
+        val priceUsd = product.priceMn.toFloatOrNull() ?: 0.0f
         totalUsd += priceUsd * product.unit.toInt()
     }
     return totalUsd

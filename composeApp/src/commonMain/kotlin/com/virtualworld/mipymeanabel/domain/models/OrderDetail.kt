@@ -9,7 +9,8 @@ data class OrderDetail(
     val state : String = "",
     val dateOrder: String = "",
     val dateDelivery: String = "",
-    val importTotal: String = "",
+    val importTotalUSD: String = "",
+    val importTotalMN: String = "",
     val unitTotal: String = "",
     val listOrderProducts: List<OrderProducts> = emptyList(),
 

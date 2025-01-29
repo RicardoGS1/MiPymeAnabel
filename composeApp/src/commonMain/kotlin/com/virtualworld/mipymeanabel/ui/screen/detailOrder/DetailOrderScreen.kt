@@ -47,7 +47,6 @@ fun DetailOrderScreen(detailOrderViewModel: DetailOrderViewModel) {
 
     }
 
-
 }
 
 @Composable
@@ -148,8 +147,22 @@ fun OrderHeader(order: OrderDetail) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Importe Total:")
-                    Text(order.importTotal)
+                    Text("Importe Total USD:")
+                    Text(order.importTotalUSD)
+
+                }
+                HorizontalDivider(
+                    color = Color.LightGray,
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Importe Total MN:")
+                    Text(order.importTotalMN)
 
                 }
                 HorizontalDivider(
