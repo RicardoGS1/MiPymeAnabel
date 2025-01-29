@@ -28,11 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.virtualworld.mipymeanabel.data.model.SignResponseState
-import com.virtualworld.mipymeanabel.ui.screen.profile.component.TitleSign
+import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.TitleSign
 import mipymeanabel.composeapp.generated.resources.Res
 import mipymeanabel.composeapp.generated.resources.YoungSerif_Regular
 import org.jetbrains.compose.resources.Font

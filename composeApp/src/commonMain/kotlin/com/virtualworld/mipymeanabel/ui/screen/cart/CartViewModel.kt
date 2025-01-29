@@ -2,6 +2,8 @@ package com.virtualworld.mipymeanabel.ui.screen.cart
 
 import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtualworld.mipymeanabel.data.dto.Order
@@ -15,6 +17,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
 import com.virtualworld.mipymeanabel.ui.screen.common.model.DataTotals
 import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
 import com.virtualworld.mipymeanabel.ui.screen.utils.roundToDecimals
+import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mipymeanabel.composeapp.generated.resources.Res
 
 
 class CartViewModel(
@@ -47,6 +51,10 @@ class CartViewModel(
 
     private val _isAuthenticate = MutableStateFlow<Boolean>(false)
     val isAuthenticate: StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
+
+    var uid : String? = null
+
+
 
     init {
         getProductsCart()
@@ -81,7 +89,12 @@ class CartViewModel(
             authUseCase.loadUser().collect { state ->
 
                 if (state is AuthenticationState.Authenticated) {
+                    uid=state.result.uid
                     _isAuthenticate.value = true
+                }
+                if(state is AuthenticationState.Unauthenticated){
+                    uid=null
+                    _isAuthenticate.value = false
                 }
 
             }
@@ -127,14 +140,15 @@ class CartViewModel(
         }
     }
 
-    //Set Order
+
     fun onClickAddOrder() {
+
 
         if (_products.value.isNotEmpty()) {
 
-            val name = "Nueva Orden"
-            val dateDelviry = _dateDelivery.toString()
-            val dateActual =  ""  //el repository se encarga
+            val state = "Enviada"
+            val dateDelviry = _dateDelivery.value.toString()
+
 
             val orderProducts = _products.value.map {
                 OrderProducts(
@@ -149,16 +163,17 @@ class CartViewModel(
 
 
             val myOrder = Order(
-                name = name,
-                dateOrder = dateActual,
+                state = state,
                 dateDelivery = dateDelviry,
                 listOrderProducts = orderProducts
             )
 
 
             viewModelScope.launch {
-                addOrderUseCase(myOrder)
-                deleteCartUseCase.deleteCart()
+                if(uid!=null) {
+                    addOrderUseCase(myOrder, uid!!)
+                    deleteCartUseCase.deleteCart()
+                }
             }
         }
 

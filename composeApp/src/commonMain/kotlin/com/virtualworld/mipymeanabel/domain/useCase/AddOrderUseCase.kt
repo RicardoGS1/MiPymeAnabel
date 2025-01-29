@@ -5,8 +5,11 @@ import com.virtualworld.mipymeanabel.data.repository.OrderRepository
 
 class AddOrderUseCase (private val orderRepository: OrderRepository) {
 
-    suspend operator fun invoke(order: Order) {
-        orderRepository.addOrder(order)
+    suspend operator fun invoke(
+        order: Order,
+        uid: String
+    ) {
+        orderRepository.addOrder(order,uid)
     }
 
 }

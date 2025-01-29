@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.ui.screen.profile.component
+package com.virtualworld.mipymeanabel.ui.screen.profile.component.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

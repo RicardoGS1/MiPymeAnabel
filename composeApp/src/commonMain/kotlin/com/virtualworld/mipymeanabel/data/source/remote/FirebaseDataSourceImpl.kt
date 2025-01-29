@@ -1,11 +1,8 @@
 package com.virtualworld.mipymeanabel.data.source.remote
 
 import com.virtualworld.mipymeanabel.data.dto.Order
-import com.virtualworld.mipymeanabel.data.dto.OrderProducts
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
@@ -45,31 +42,38 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
         }
     }
 
-    override suspend fun addOrder(order: Order): NetworkResponseState<Boolean> {
+    override suspend fun addOrder(order: Order, uid: String): NetworkResponseState<Boolean> {
 
 
         firestore.collection("orders")
-            .document("0FlkOEsgT8RO3wOS5Ot1J73aXxx2").collection("collectionOrders")
+            .document(uid).collection("collectionOrders")
             .document.set(order)
 
         return NetworkResponseState.Success(true)
     }
 
-    override fun getOrders(): Flow<NetworkResponseState<List<Order>>> = flow {
+    override fun getOrders(uid: String?): Flow<NetworkResponseState<List<Order>>> = flow {
 
-        try{
-            firestore.collection("orders")
-                .document("0FlkOEsgT8RO3wOS5Ot1J73aXxx2")
-                .collection("collectionOrders")
-                .snapshots.collect {
+        println(uid)
 
-                    val orders = it.documents.map { documentSnapshot ->
-                        documentSnapshot.data<Order>()
+
+        try {
+            if (uid != null) {
+                firestore.collection("orders")
+                    .document(uid)
+                    .collection("collectionOrders")
+                    .snapshots.collect {
+
+                        val orders = it.documents.map { documentSnapshot ->
+                            documentSnapshot.data<Order>()
+                        }
+                        println("getOrders: $orders")
+                        emit(NetworkResponseState.Success(orders))
                     }
-                    println("getProducts: $orders")
-                    emit(NetworkResponseState.Success(orders))
-                }
-        } catch (e:Exception){
+            } else {
+                emit(NetworkResponseState.Success( emptyList() ))
+            }
+        } catch (e: Exception) {
             NetworkResponseState.Error(e)
         }
     }

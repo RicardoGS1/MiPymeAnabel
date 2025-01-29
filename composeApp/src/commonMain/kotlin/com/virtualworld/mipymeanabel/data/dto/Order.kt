@@ -5,9 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Order(
 
-    val name : String,
-    val dateOrder: String,
-    val dateDelivery: String,
+    val number : String = "",
+    val state : String = "",
+    val dateOrder: String = "",
+    val dateDelivery: String = "",
     val listOrderProducts: List<OrderProducts> = emptyList(),
 
 )
@@ -20,6 +21,6 @@ data class OrderProducts(
     val priceMn: String = "",
     val priceUsd: String = "",
     val image:String = "",
-    val unit: String
+    val unit: String = ""
 
 )
