@@ -8,6 +8,7 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetBanelUseCase
 import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,10 +24,9 @@ class HomeViewModel(
     private val getBanelUseCase: GetBanelUseCase
 ) : ViewModel() {
 
-//    private val _screenState = MutableStateFlow<ScreenStates> (ScreenStates.Loading)
-//    val screenState: StateFlow<ScreenStates> get() = _screenState
 
-    private val _allProducts = MutableStateFlow<ScreenStates<List<ProductAll>>>(ScreenStates.Loading)
+    private val _allProducts =
+        MutableStateFlow<ScreenStates<List<ProductAll>>>(ScreenStates.Loading)
     val productsState: StateFlow<ScreenStates<List<ProductAll>>> get() = filteredProductsState()
 
     private val _allBanel = MutableStateFlow<ScreenStates<List<String>>>(ScreenStates.Loading)
@@ -42,21 +42,35 @@ class HomeViewModel(
     private val _searchText = MutableStateFlow<String>("")
     val searchText: StateFlow<String> get() = _searchText.asStateFlow()
 
+    private var banelJob: Job? = null
 
     init {
-        getAllProducts()
-        getAllBanel()
-
+        loadData()
     }
 
+    fun loadData() {
+        getAllProducts()
+        getAllBanel()
+    }
+
+
     private fun getAllBanel() {
-        viewModelScope.launch {
 
-            getBanelUseCase().collect { banel->
+        banelJob?.cancel()
 
-                when(banel){
-                    is NetworkResponseState.Error -> { _allBanel.value = ScreenStates.Error(banel.exception.message.toString())  }
-                    NetworkResponseState.Loading -> { _allBanel.value = ScreenStates.Loading }
+        banelJob = viewModelScope.launch {
+
+            getBanelUseCase().collect { banel ->
+
+                when (banel) {
+                    is NetworkResponseState.Error -> {
+                        _allBanel.value = ScreenStates.Error(banel.exception.message.toString())
+                    }
+
+                    NetworkResponseState.Loading -> {
+                        _allBanel.value = ScreenStates.Loading
+                    }
+
                     is NetworkResponseState.Success -> {
                         println(banel.result)
                         _allBanel.value = ScreenStates.Success(banel.result)
@@ -71,12 +85,18 @@ class HomeViewModel(
 
         viewModelScope.launch {
 
-
             getAllProductUseCase().collect { listProducts ->
 
                 when (listProducts) {
-                    is NetworkResponseState.Error -> { _allProducts.value = ScreenStates.Error(listProducts.exception.message.toString())    }
-                    NetworkResponseState.Loading -> {_allProducts.value = ScreenStates.Loading  }
+                    is NetworkResponseState.Error -> {
+                        _allProducts.value =
+                            ScreenStates.Error(listProducts.exception.message.toString())
+                    }
+
+                    NetworkResponseState.Loading -> {
+                        _allProducts.value = ScreenStates.Loading
+                    }
+
                     is NetworkResponseState.Success -> {
 
                         _allProducts.update { ScreenStates.Success(listProducts.result) }
@@ -112,18 +132,10 @@ class HomeViewModel(
                     }
                     ScreenStates.Success(filteredProducts)
                 }
+
                 is ScreenStates.Error -> ScreenStates.Error(listAllProducts.exception)
                 is ScreenStates.Loading -> ScreenStates.Loading
             }
-//
-//            if( listAllProducts as ScreenStates.Success ){
-//
-//            }
-//
-//            listAllProducts .filter { product ->
-//                product.name.contains(text, ignoreCase = true) &&
-//                        (product.category == category || category == "Todos" || (category == "Favorites" && product.favorite))
-//            }
 
         }.stateIn(
             viewModelScope,
@@ -151,11 +163,6 @@ class HomeViewModel(
         }
 
     }
-
-    fun onClickProduct(id: String) {
-
-    }
-
 
 }
 

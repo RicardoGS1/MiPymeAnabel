@@ -62,7 +62,7 @@ class ProductRepositoryImp(
 
             when (firebase) {
                 is NetworkResponseState.Error -> NetworkResponseState.Error(firebase.exception)
-                NetworkResponseState.Loading -> NetworkResponseState.Loading
+                is NetworkResponseState.Loading -> NetworkResponseState.Loading
                 is NetworkResponseState.Success -> {
 
 

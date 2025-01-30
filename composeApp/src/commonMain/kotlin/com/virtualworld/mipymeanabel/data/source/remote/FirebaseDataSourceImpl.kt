@@ -5,27 +5,41 @@ import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.withTimeoutOrNull
 
 
 class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : FirebaseDataSource {
 
+    class ProductEmptyException : Exception("Product Empty")
+
     override fun getAllProducts(): Flow<NetworkResponseState<List<Product>>> = flow {
         try {
 
+            emit(NetworkResponseState.Loading)
+
             firestore.collection("PRODUCTS").snapshots.collect { querySnapshot ->
+
                 val products = querySnapshot.documents.map { documentSnapshot ->
                     documentSnapshot.data<Product>()
                 }
-                println("getProducts: $products")
-                emit(NetworkResponseState.Success(products))
+                if (products.isEmpty()) {
+                    throw ProductEmptyException()
+                } else {
+                    emit(NetworkResponseState.Success(products))
+                }
             }
-        } catch (e: FirebaseFirestoreException) {
+
+        } catch (e: Exception) {
             emit(NetworkResponseState.Error(e))
         }
     }
+
 
     override suspend fun getProductById(productId: String): NetworkResponseState<Product> {
 
