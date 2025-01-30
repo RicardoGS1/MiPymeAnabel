@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.withTimeoutOrNull
 
 
@@ -28,8 +29,7 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
                     documentSnapshot.data<Product>()
                 }
                 if (products.isEmpty()) {
-                    //throw ProductEmptyException()
-                    emit(NetworkResponseState.Error(Exception("Product Empty")))
+                    throw ProductEmptyException()
                 } else {
                     emit(NetworkResponseState.Success(products))
                 }
@@ -39,6 +39,7 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
             emit(NetworkResponseState.Error(e))
         }
     }
+
 
     override suspend fun getProductById(productId: String): NetworkResponseState<Product> {
 
