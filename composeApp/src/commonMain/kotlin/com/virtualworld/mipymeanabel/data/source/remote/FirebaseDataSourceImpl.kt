@@ -58,6 +58,10 @@ class FirebaseDataSourceImpl(private val firestore: FirebaseFirestore) : Firebas
 
     override suspend fun addOrder(order: Order, uid: String): NetworkResponseState<Boolean> {
 
+        firestore.collection("orders")
+            .document(uid)
+            .set(mapOf("uid" to uid))
+
 
         firestore.collection("orders")
             .document(uid).collection("collectionOrders")
