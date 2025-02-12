@@ -53,6 +53,7 @@ class CartViewModel(
     val isAuthenticate: StateFlow<Boolean> get() = _isAuthenticate.asStateFlow()
 
     var uid : String? = null
+    var email: String = ""
 
 
 
@@ -90,6 +91,7 @@ class CartViewModel(
 
                 if (state is AuthenticationState.Authenticated) {
                     uid=state.result.uid
+                    email=state.result.email.toString()
                     _isAuthenticate.value = true
                 }
                 if(state is AuthenticationState.Unauthenticated){
@@ -163,6 +165,7 @@ class CartViewModel(
 
 
             val myOrder = Order(
+                email = email,
                 state = state,
                 dateDelivery = dateDelviry,
                 listOrderProducts = orderProducts
