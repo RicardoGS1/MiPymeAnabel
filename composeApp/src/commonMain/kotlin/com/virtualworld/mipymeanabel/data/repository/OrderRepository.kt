@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
 
+    suspend fun addDocumentOrder(uid: String, token:String): NetworkResponseState<Boolean>
 
     suspend fun addOrder(order: Order, uid: String): NetworkResponseState<Boolean>
 
