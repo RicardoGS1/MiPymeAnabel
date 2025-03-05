@@ -13,6 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
+import com.virtualworld.mipymeanabel.ui.screen.common.view.ErrorViewCommon
+import com.virtualworld.mipymeanabel.ui.screen.common.view.LoadingViewCommon
 import com.virtualworld.mipymeanabel.ui.screen.home.component.GridProducts
 import com.virtualworld.mipymeanabel.ui.screen.home.component.ImagePagerView
 import com.virtualworld.mipymeanabel.ui.screen.home.component.SearchBar
@@ -22,7 +25,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked: (String) -> Unit) {
+fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(), onProductClicked: (String) -> Unit) {
 
     val products by homeViewModel.productsState.collectAsState()
     val banel by homeViewModel.allBanel.collectAsState()
@@ -34,33 +37,48 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinViewModel(),  onProductClicked
 
     val searchBarVisible by remember { derivedStateOf { (listState.firstVisibleItemScrollOffset < 2) } }
 
-    val updateSearchText = { newSearchText: String -> homeViewModel.updateSearchText(newSearchText) }
+    val updateSearchText =
+        { newSearchText: String -> homeViewModel.updateSearchText(newSearchText) }
 
-    val updateSelectedCategory = { category: String -> homeViewModel.updateSelectedCategory(category) }
+    val updateSelectedCategory =
+        { category: String -> homeViewModel.updateSelectedCategory(category) }
 
-    val onClickFavorite = { id:String -> homeViewModel.onClickFavorite(id) }
+    val onClickFavorite = { id: String -> homeViewModel.onClickFavorite(id) }
+
+    val onRefresh = { homeViewModel.loadData() }
 
 
 
     Surface(modifier = Modifier.fillMaxSize().padding(top = 40.dp)) {
 
-        Column() {
+        if (products is ScreenStates.Success && banel is ScreenStates.Success) {
 
-            AnimatedVisibility(visible = (searchBarVisible)  ) {
-                SearchBar(searchText,updateSearchText)
+            Column () {
+
+                AnimatedVisibility(visible = (searchBarVisible)) {
+                    SearchBar(searchText, updateSearchText)
+                }
+
+                AnimatedVisibility(visible = (searchBarVisible) && searchText.isEmpty()) {
+                    ImagePagerView((banel as ScreenStates.Success<List<String>>).result)
+                }
+
+                SelectCategory(categories, selectedCategory, updateSelectedCategory)
+
+
+                GridProducts(listState, products, onClickFavorite, onProductClicked)
+
             }
-
-            AnimatedVisibility(visible = (searchBarVisible) && searchText.isEmpty()) {
-                ImagePagerView(banel)
-            }
-
-            SelectCategory(categories, selectedCategory,updateSelectedCategory)
-
-
-            GridProducts(listState, products, onClickFavorite,onProductClicked)
-
         }
+
+        if (products is ScreenStates.Error || banel is ScreenStates.Error)
+            ErrorViewCommon((products as ScreenStates.Error).exception,onRefresh)
+        else if (products is ScreenStates.Loading || banel is ScreenStates.Loading)
+                LoadingViewCommon()
+
     }
+
+
 }
 
 

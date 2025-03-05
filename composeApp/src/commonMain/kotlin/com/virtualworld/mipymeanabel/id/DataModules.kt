@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.id
 import androidx.room.RoomDatabase
 import com.virtualworld.mipymeanabel.data.databese.AppDatabase
 import com.virtualworld.mipymeanabel.data.databese.TodoDao
+import com.virtualworld.mipymeanabel.data.notification.NotificationService
 import com.virtualworld.mipymeanabel.data.repository.AuthRepository
 import com.virtualworld.mipymeanabel.data.repository.OrderRepository
 import com.virtualworld.mipymeanabel.data.repository.OrderRepositoryImpl
@@ -19,8 +20,10 @@ import com.virtualworld.mipymeanabel.domain.useCase.AddFavoriteUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AddOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.DeletCartUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.DeletedOrderUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetAllProductUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetBanelUseCase
+import com.virtualworld.mipymeanabel.domain.useCase.GetOrderByIdUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductByIdUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetProductCartUseCase
@@ -50,6 +53,8 @@ val dataModules = module {
     single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<RoomDataSource> { RoomDataSourceImpl(get()) }
 
+    singleOf(::NotificationService)
+
 
     singleOf(::AuthRepository)
     singleOf( ::FirebaseAuthDataSourceImpl )
@@ -65,6 +70,8 @@ val dataModules = module {
     factoryOf(::GetOrdersUseCase)
     factoryOf(::DeletCartUseCase)
     factoryOf(::GetBanelUseCase)
+    factoryOf(::DeletedOrderUseCase)
+    factoryOf(::GetOrderByIdUseCase)
 
 
 

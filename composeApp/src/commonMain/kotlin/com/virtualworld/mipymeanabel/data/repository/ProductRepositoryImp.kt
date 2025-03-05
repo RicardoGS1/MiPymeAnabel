@@ -2,7 +2,7 @@ package com.virtualworld.mipymeanabel.data.repository
 
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.dto.Product
-import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.models.ProductAll
 import com.virtualworld.mipymeanabel.data.dto.ProductInfo
 import com.virtualworld.mipymeanabel.data.mapper.toProductAll
 import com.virtualworld.mipymeanabel.data.mapper.toProductCart
@@ -62,7 +62,7 @@ class ProductRepositoryImp(
 
             when (firebase) {
                 is NetworkResponseState.Error -> NetworkResponseState.Error(firebase.exception)
-                NetworkResponseState.Loading -> NetworkResponseState.Loading
+                is NetworkResponseState.Loading -> NetworkResponseState.Loading
                 is NetworkResponseState.Success -> {
 
 

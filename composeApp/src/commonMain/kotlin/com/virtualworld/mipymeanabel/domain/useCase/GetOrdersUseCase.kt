@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 class GetOrdersUseCase (private val orderRepository: OrderRepository) {
 
-    operator fun invoke(): Flow<NetworkResponseState<List<Order>>>{
-       return orderRepository.getOrder()
+    suspend operator fun invoke(uid: String): Flow<NetworkResponseState<List<Order>>>{
+       return orderRepository.getOrder(uid)
     }
 
 

@@ -27,11 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.virtualworld.mipymeanabel.data.model.SignResponseState
-import com.virtualworld.mipymeanabel.ui.screen.profile.component.TitleSign
+import com.virtualworld.mipymeanabel.ui.screen.profile.component.common.TitleSign
+import mipymeanabel.composeapp.generated.resources.Res
+import mipymeanabel.composeapp.generated.resources.YoungSerif_Regular
+import org.jetbrains.compose.resources.Font
+
 
 @Composable
 fun SelectSign(
@@ -41,6 +45,7 @@ fun SelectSign(
     signUpState: SignResponseState
 ) {
 
+   // val myFont = fontResource("YoungSerif-Regular.ttf")
 
     val primaryColor = MaterialTheme.colorScheme.primary
     val darkerPrimaryColor = Color.Black
@@ -52,6 +57,11 @@ fun SelectSign(
     val changerVisibleSignInCard = {
         visibleSignInCard = false
         visibleSignUpCard = true
+    }
+
+    val changerVisibleSignUpCard = {
+        visibleSignInCard = true
+        visibleSignUpCard = false
     }
 
 
@@ -68,8 +78,8 @@ fun SelectSign(
             }
     ) {
 
-        TitleSign(visibleSignInCard, "Iniciar Sesion")
-        TitleSign(visibleSignUpCard, "Crear Cuenta")
+        TitleSign(visibleSignInCard, "Inicie su sesión")
+        TitleSign(visibleSignUpCard, "Cree su cuenta")
 
 
         Column(
@@ -92,7 +102,8 @@ fun SelectSign(
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 32.sp, color = Color.White
                 ),
-                fontWeight = FontWeight.Normal,
+               // fontWeight = FontWeight.Normal,
+                fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular) )
 
                 )
 
@@ -102,7 +113,8 @@ fun SelectSign(
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 32.sp, color = Color.White
                 ),
-                fontWeight = FontWeight.Bold,
+               // fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular) )
             )
 
             Button(
@@ -119,7 +131,7 @@ fun SelectSign(
                     contentColor = Color.White // Color del texto (opcional)
                 )
             ) {
-                Text(text = "Crear Usuario", Modifier.padding(horizontal = 32.dp))
+                Text(text = "Crear Cuenta", Modifier.padding(horizontal = 32.dp))
 
             }
 
@@ -137,7 +149,7 @@ fun SelectSign(
                     contentColor = Color.White
                 )
             ) {
-                Text(text = "Iniciar Secion", Modifier.padding(horizontal = 32.dp))
+                Text(text = "Iniciar Sesión", Modifier.padding(horizontal = 32.dp))
 
             }
 
@@ -147,7 +159,7 @@ fun SelectSign(
 
 
         SignInCard(Modifier.align(Alignment.BottomCenter), visibleSignInCard, signIn, signInState, changerVisibleSignInCard)
-        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp, signUpState)
+        SignUpCard(Modifier.align(Alignment.BottomCenter), visibleSignUpCard, signUp, signUpState, changerVisibleSignUpCard)
 
     }
 

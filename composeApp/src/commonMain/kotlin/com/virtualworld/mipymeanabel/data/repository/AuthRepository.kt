@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.data.repository
 import com.virtualworld.mipymeanabel.data.model.AuthenticationState
 import com.virtualworld.mipymeanabel.data.model.SignResponseState
 import com.virtualworld.mipymeanabel.data.source.remote.FirebaseAuthDataSource
+import dev.gitlive.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -36,7 +37,7 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource)
 
     }
 
-    fun loadUser(): Flow<AuthenticationState> {
+    fun loadUser(): Flow<AuthenticationState<FirebaseUser>> {
 
 
         return firebaseAuthDataSource.loadUser().map { fireUser ->
@@ -48,7 +49,7 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource)
 
 
                 } else {
-                    AuthenticationState.Authenticated(fireUser.email.toString())
+                    AuthenticationState.Authenticated(fireUser)
                 }
             } catch (e: Throwable) {
                 println("errrror en repoaut")
@@ -56,6 +57,10 @@ class AuthRepository(private val firebaseAuthDataSource: FirebaseAuthDataSource)
             }
 
         }
+    }
+
+    fun getUid() : String {
+        return firebaseAuthDataSource.getUid()
     }
 
 

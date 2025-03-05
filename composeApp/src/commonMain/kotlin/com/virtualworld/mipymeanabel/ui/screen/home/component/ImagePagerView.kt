@@ -25,73 +25,35 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.virtualworld.mipymeanabel.ui.screen.model.ScreenStates
+import com.virtualworld.mipymeanabel.ui.screen.common.model.ScreenStates
 
 @Composable
-fun ImagePagerView(images: ScreenStates<List<String>>) {
+fun ImagePagerView(images: List<String>) {
 
 
-    when (images) {
-        is ScreenStates.Error -> {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth().height(180.dp).padding(horizontal = 8.dp, vertical = 4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(images.exception)
-                    IconButton(onClick = {}) {
-                        Icons.Filled.Refresh
-                    }
-                }
-
-            }
-        }
-
-        is ScreenStates.Loading -> {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth().height(180.dp).padding(horizontal = 8.dp, vertical = 4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-
-                CircularProgressIndicator()
-
-            }
-
-        }
-
-        is ScreenStates.Success -> {
+    val pagerState = rememberPagerState(
+        initialPage = 1,
+        pageCount = { images.size }
+    )
 
 
-            val pagerState = rememberPagerState(
-                initialPage = 1,
-                pageCount = { images.result.size }
+    Box(contentAlignment = Alignment.TopCenter) {
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth().height(180.dp).padding(horizontal = 8.dp, vertical = 4.dp)
+                .clip(shape = MaterialTheme.shapes.medium)
+
+        ) { page ->
+            AsyncImage(
+                model = images[page],
+                contentDescription = "Imagen ${page + 1}",
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
             )
 
-
-            Box(contentAlignment = Alignment.TopCenter) {
-
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxWidth().height(180.dp).padding(horizontal = 8.dp, vertical = 4.dp)
-                        .clip(shape = MaterialTheme.shapes.medium)
-
-                ) { page ->
-                    AsyncImage(
-                        model = images.result[page],
-                        contentDescription = "Imagen ${page + 1}",
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.FillWidth
-                    )
-
-                }
-
-            }
         }
+
     }
 }

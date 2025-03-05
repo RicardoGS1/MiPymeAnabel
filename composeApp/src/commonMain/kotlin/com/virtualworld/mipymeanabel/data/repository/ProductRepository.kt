@@ -1,7 +1,7 @@
 package com.virtualworld.mipymeanabel.data.repository
 
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
-import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.models.ProductAll
 import com.virtualworld.mipymeanabel.domain.models.ProductCart
 import kotlinx.coroutines.flow.Flow
 

@@ -32,3 +32,8 @@ object RouteDetail : AppDestinations {
     override val route = "detail"
     override val title = "Detalles"
 }
+
+object RouteDetailOrder : AppDestinations {
+    override val route = "detailOrder"
+    override val title = "Detalles de la orden"
+}

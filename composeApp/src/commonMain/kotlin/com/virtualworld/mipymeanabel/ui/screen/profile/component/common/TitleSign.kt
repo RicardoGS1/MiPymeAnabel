@@ -1,4 +1,4 @@
-package com.virtualworld.mipymeanabel.ui.screen.profile.component
+package com.virtualworld.mipymeanabel.ui.screen.profile.component.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -10,9 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mipymeanabel.composeapp.generated.resources.Res
+import mipymeanabel.composeapp.generated.resources.YoungSerif_Regular
+import org.jetbrains.compose.resources.Font
 
 @Composable
 fun TitleSign(visibleSignCard: Boolean,title:String) {
@@ -27,7 +31,8 @@ fun TitleSign(visibleSignCard: Boolean,title:String) {
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    fontSize = 32.sp
+                    fontSize = 32.sp,
+                    fontFamily = FontFamily(Font(Res.font.YoungSerif_Regular) )
                 )
                 Text(
                     text = title,

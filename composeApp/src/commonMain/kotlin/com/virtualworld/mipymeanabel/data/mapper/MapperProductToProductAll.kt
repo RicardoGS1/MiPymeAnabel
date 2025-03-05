@@ -1,7 +1,7 @@
 package com.virtualworld.mipymeanabel.data.mapper
 
 import com.virtualworld.mipymeanabel.data.dto.Product
-import com.virtualworld.mipymeanabel.data.dto.ProductAll
+import com.virtualworld.mipymeanabel.domain.models.ProductAll
 
 fun Product.toProductAll(favorite: Boolean?, cart: Boolean?): ProductAll {
 
