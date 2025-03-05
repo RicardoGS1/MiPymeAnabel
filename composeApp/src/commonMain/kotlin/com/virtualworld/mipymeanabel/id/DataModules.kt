@@ -3,6 +3,7 @@ package com.virtualworld.mipymeanabel.id
 import androidx.room.RoomDatabase
 import com.virtualworld.mipymeanabel.data.databese.AppDatabase
 import com.virtualworld.mipymeanabel.data.databese.TodoDao
+import com.virtualworld.mipymeanabel.data.notification.NotificationService
 import com.virtualworld.mipymeanabel.data.repository.AuthRepository
 import com.virtualworld.mipymeanabel.data.repository.OrderRepository
 import com.virtualworld.mipymeanabel.data.repository.OrderRepositoryImpl
@@ -51,6 +52,8 @@ val dataModules = module {
     single<ProductRepository> { ProductRepositoryImp(get(),get()) }
     single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<RoomDataSource> { RoomDataSourceImpl(get()) }
+
+    singleOf(::NotificationService)
 
 
     singleOf(::AuthRepository)

@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Order(
 
+    val name: String = "",
+    val email: String = "",
     val number : String = "",
     val state : String = "",
     val dateOrder: String = "",

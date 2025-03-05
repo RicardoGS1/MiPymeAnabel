@@ -15,6 +15,14 @@ class OrderRepositoryImpl(
     private val firebaseDataSource: FirebaseDataSource,
 ) : OrderRepository {
 
+
+    override suspend fun addDocumentOrder(
+        uid: String,
+        token: String
+    ): NetworkResponseState<Boolean> {
+      return  firebaseDataSource.addDocumentOrder(uid, token)
+    }
+
     override suspend fun addOrder(order: Order, uid: String): NetworkResponseState<Boolean> {
 
         val completedOrder =
