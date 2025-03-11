@@ -62,7 +62,7 @@ kotlin {
 
             //FIREBASE
             implementation(project.dependencies.platform(libs.android.firebase.bom))
-            implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+            implementation("com.google.firebase:firebase-messaging-ktx:24.1.0")
         }
         commonMain.dependencies {
 
@@ -102,16 +102,11 @@ kotlin {
             //FIREBASE
             implementation(libs.gitlive.firebase.firestore)
             implementation(libs.gitlive.firebase.auth)
-           // dependencies { api("io.github.mirzemehdi:kmpnotifier:1.4.0") }
-                //implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 
 
             implementation("androidx.room:room-runtime:2.7.0-alpha11")
             implementation("androidx.sqlite:sqlite-bundled:2.5.0-alpha01")
             //ksp("androidx.room:room-compiler:2.7.0-alpha11")
-
-
-            //implementation("com.github.arkivanov:decompose-extensions-compose-jetbrains:0.8.0")
 
 
         }
