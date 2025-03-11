@@ -10,14 +10,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun App() {
+fun App(codeOrder: String?) {
 
     val darkTheme = isSystemInDarkTheme()
     val colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()
 
     MaterialTheme(colorScheme = colorScheme) {
 
-        MainScreen()
+        MainScreen(codeOrder)
 
     }
 }

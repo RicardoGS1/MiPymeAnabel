@@ -13,28 +13,34 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
+    companion object {
+        const val SCREEN_EXTRA = "screen"
+    }
+
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             val title = remoteMessage.data["title"]
             val body = remoteMessage.data["body"]
+            val code = remoteMessage.data["code"]
             if (title != null && body != null) {
-                sendNotification(title, body)
+                sendNotification(title, body, code)
             }
         }
     }
 
     override fun onNewToken(token: String) {
         println("FCM Refreshed token: $token")
-
-        // Enviar el token a tu servidor (esto puede llevar tiempo)
-        //sendTokenToServer(token)
+        // Enviar el token a tu servidor
     }
 
-    private fun sendNotification(title: String, messageBody: String) {
+    private fun sendNotification(title: String, messageBody: String, code: String?) {
 
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        intent.putExtra(SCREEN_EXTRA, code)
 
         val pendingIntent = PendingIntent.getActivity(
             this, 0 /* Request code */, intent,
@@ -51,7 +57,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
 
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -65,7 +72,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         notificationManager.notify(0, notificationBuilder.build())
     }
-
 
 
 }
