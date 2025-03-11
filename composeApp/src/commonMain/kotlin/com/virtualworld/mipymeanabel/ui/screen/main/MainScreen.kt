@@ -1,6 +1,5 @@
 package com.virtualworld.mipymeanabel.ui.screen.main
 
-import androidx.compose.animation.core.copy
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -24,7 +23,7 @@ import com.virtualworld.mipymeanabel.navegation.AppNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(codeOrder: String?) {
 
     val navController = rememberNavController()
     val paddingStatusBar = WindowInsets.statusBars.asPaddingValues()
@@ -48,7 +47,7 @@ fun MainScreen() {
                 bottom = bottomPadding
             )
 
-            AppNavHost(navController, modifiedPaddingValues)
+            AppNavHost(navController, modifiedPaddingValues, codeOrder)
 
 
         }

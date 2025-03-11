@@ -21,11 +21,13 @@ import org.koin.core.parameter.parametersOf
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues) {
+fun AppNavHost(navController: NavHostController, paddingValues: PaddingValues, codeOrder: String?) {
+
+
 
     NavHost(
         navController,
-        startDestination = RouteHome.route,
+        startDestination = if(codeOrder==null) RouteHome.route else  RouteDetailOrder.route + "/$codeOrder" ,
         modifier = Modifier.padding(paddingValues)
     ) {
 
