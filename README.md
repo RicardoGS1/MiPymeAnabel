@@ -14,13 +14,16 @@ Es una aplicación desarrollada con Kotlin Multiolatform para poder ser desplega
 
 
 
+
+
+
+
 ## Capturas
 
 |   |  |
 | ------------- | ------------- |
-| ![resume](https://github.com/user-attachments/assets/ed96c6e4-22ee-4abb-af97-8665ded72c1d)  | ![sell](https://github.com/user-attachments/assets/7120425f-d6e8-42bd-8026-5e517cc38ea0)  |
-| ![edit](https://github.com/user-attachments/assets/0b7c25b2-9fcf-4fb0-8f3e-05c391860bc8) | ![login](https://github.com/user-attachments/assets/aafb180f-ca5f-4cc0-946a-2b2ea2690a0d)|
-| ![store](https://github.com/user-attachments/assets/cd36cf42-2ad2-42ac-860b-c25681ca2bc3) | ![menu](https://github.com/user-attachments/assets/7bc27817-5f29-42e5-8f48-9635e1fed785)
+| ![home](https://github.com/user-attachments/assets/2dde6506-cf17-422e-82ea-79c0fbee975c)  | ![cart](https://github.com/user-attachments/assets/0a3e4d76-f4df-4924-a332-2bd7be3de140)  |
+| ![orders](https://github.com/user-attachments/assets/cd1c6220-b993-487f-ac9b-ba254f4a0dbd) | ![sesion](https://github.com/user-attachments/assets/4f85026e-88e0-48a4-aa46-70b80364f174) |
 |
 
 ## Tecnologias
