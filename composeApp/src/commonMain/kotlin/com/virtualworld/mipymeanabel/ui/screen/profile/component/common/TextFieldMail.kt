@@ -30,7 +30,7 @@ fun TextFieldMail(
         },
         label = { Text("Email", color = MaterialTheme.colorScheme.primary) },
         modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 36.dp),
+            .padding( horizontal = 36.dp),
         colors = TextFieldDefaults.colors(
             disabledContainerColor = Color.Transparent,
             focusedContainerColor = Color.Transparent,

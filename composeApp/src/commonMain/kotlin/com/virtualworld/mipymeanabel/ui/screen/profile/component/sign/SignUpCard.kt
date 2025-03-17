@@ -81,7 +81,7 @@ fun SignUpCard(
 
             Column(
                 modifier = Modifier.fillMaxSize().padding(top = 32.dp),
-                verticalArrangement = Arrangement.Top,
+                verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -93,7 +93,7 @@ fun SignUpCard(
                     },
                     label = { Text("Nombre", color = MaterialTheme.colorScheme.primary) },
                     modifier = Modifier.fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 36.dp),
+                        .padding( horizontal = 36.dp),
                     colors = TextFieldDefaults.colors(
                         disabledContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
@@ -175,23 +175,27 @@ fun SignUpCard(
                     CircularProgressIndicator(modifier = Modifier.size(42.dp).padding(top = 12.dp))
                 }
 
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(36.dp),
+                        horizontalAlignment = Alignment.End
+                    ) {
 
-            }
-
-            Column(
-                modifier = Modifier.align(Alignment.BottomEnd).padding(36.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-
-                Text(text = "Ya tienes una cuenta?")
+                        Text(text = "Ya tienes una cuenta?")
 
 
-                TextButton(
-                    onClick = {changerVisibleSignUpCard()},
-                ) {
-                    Text("Iniciar Sesión")
+                        TextButton(
+                            onClick = { changerVisibleSignUpCard() },
+                        ) {
+                            Text("Iniciar Sesión")
+                        }
+                    }
                 }
+
+
             }
+
+
         }
 
     }
