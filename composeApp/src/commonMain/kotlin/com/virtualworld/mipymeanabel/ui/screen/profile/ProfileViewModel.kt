@@ -8,6 +8,7 @@ import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.SignResponseState
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -104,6 +105,8 @@ class ProfileViewModel(
         viewModelScope.launch {
             _userState.update { AuthenticationState.Loading }
             authUseCase.singOut()
+            delay(200)
+            _userState.update { AuthenticationState.Unauthenticated }
         }
     }
 
