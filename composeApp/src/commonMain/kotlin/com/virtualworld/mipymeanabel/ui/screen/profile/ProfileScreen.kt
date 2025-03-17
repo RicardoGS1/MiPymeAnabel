@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.virtualworld.mipymeanabel.data.model.AuthenticationState
+import com.virtualworld.mipymeanabel.domain.models.AuthModel
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.ResumeOrder
 import com.virtualworld.mipymeanabel.ui.screen.profile.component.sign.SelectSign
 
@@ -35,7 +36,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onOrderClicked: (String) -> Unit)
         is AuthenticationState.Authenticated -> {
 
             ResumeOrder(
-                (authState as AuthenticationState.Authenticated<String>).result,
+                (authState as AuthenticationState.Authenticated<AuthModel>).result,
                 ordersState,
                 signOut,
                 onOrderClicked

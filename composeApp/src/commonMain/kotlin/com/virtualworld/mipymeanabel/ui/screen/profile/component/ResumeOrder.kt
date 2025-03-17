@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.virtualworld.mipymeanabel.data.dto.Order
+import com.virtualworld.mipymeanabel.domain.models.AuthModel
 import com.virtualworld.mipymeanabel.ui.screen.utils.convertMillisToDate
 import mipymeanabel.composeapp.generated.resources.Res
 import mipymeanabel.composeapp.generated.resources.YoungSerif_Regular
@@ -43,7 +44,7 @@ import org.jetbrains.compose.resources.Font
 
 @Composable
 fun ResumeOrder(
-    mail: String,
+    user: AuthModel,
     ordersState: List<Order>,
     signOut: () -> Unit,
     onOrderClicked: (String) -> Unit
@@ -105,9 +106,15 @@ fun ResumeOrder(
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
 
-                            Text("Usuario: $mail", style = MaterialTheme.typography.titleLarge)
-                            Text("Correo: $mail", style = MaterialTheme.typography.titleMedium)
-                            Text("Numero: 0000000", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "Usuario: ${user.name}",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                "Correo: ${user.email}",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
 
 
                         }
@@ -142,7 +149,7 @@ fun ResumeOrder(
                 items(ordersState) { order ->
 
 
-                    ItemOrder(order,onOrderClicked)
+                    ItemOrder(order, onOrderClicked)
 
 
                 }
@@ -237,7 +244,8 @@ fun ItemOrder(order: Order, onOrderClicked: (String) -> Unit) {
 
 
             Box(
-                Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary).clickable { onOrderClicked( order.number ) },
+                Modifier.fillMaxSize().background(MaterialTheme.colorScheme.primary)
+                    .clickable { onOrderClicked(order.number) },
                 contentAlignment = Alignment.Center,
             ) {
 

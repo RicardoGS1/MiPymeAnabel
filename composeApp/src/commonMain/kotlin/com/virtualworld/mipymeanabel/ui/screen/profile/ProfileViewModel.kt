@@ -6,6 +6,7 @@ import com.virtualworld.mipymeanabel.data.dto.Order
 import com.virtualworld.mipymeanabel.data.model.AuthenticationState
 import com.virtualworld.mipymeanabel.data.model.NetworkResponseState
 import com.virtualworld.mipymeanabel.data.model.SignResponseState
+import com.virtualworld.mipymeanabel.domain.models.AuthModel
 import com.virtualworld.mipymeanabel.domain.useCase.AuthUseCase
 import com.virtualworld.mipymeanabel.domain.useCase.GetOrdersUseCase
 import kotlinx.coroutines.delay
@@ -19,8 +20,9 @@ class ProfileViewModel(
     private val getOrdersUseCase: GetOrdersUseCase
 ) : ViewModel() {
 
-    private val _userState = MutableStateFlow<AuthenticationState<String>>(AuthenticationState.Loading)
-    val userState: StateFlow<AuthenticationState<String>> get() = _userState
+    private val _userState =
+        MutableStateFlow<AuthenticationState<AuthModel>>(AuthenticationState.Loading)
+    val userState: StateFlow<AuthenticationState<AuthModel>> get() = _userState
 
     private val _signInState = MutableStateFlow<SignResponseState>(SignResponseState.Idle)
     val signInState: StateFlow<SignResponseState> get() = _signInState
@@ -46,7 +48,11 @@ class ProfileViewModel(
             authUseCase.loadUser().collect { authState ->
                 when (authState) {
                     is AuthenticationState.Authenticated -> {
-                        _userState.update { AuthenticationState.Authenticated(authState.result.email.toString()) }
+                        _userState.update { AuthenticationState.Authenticated(AuthModel(
+                            email = authState.result.email.toString(),
+                            name = authState.result.displayName.toString(),
+                            number = "0000000000"
+                        )) }
                         loadOrders(authState.result.uid)
                     }
 
@@ -94,7 +100,7 @@ class ProfileViewModel(
         viewModelScope.launch {
 
             _signUpState.update { SignResponseState.Loading }
-            _signUpState.update { authUseCase.singUp(email, password, name) }
+            _signUpState.update { authUseCase.singUp(email, password, name ) }
 
         }
 
